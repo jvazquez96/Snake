@@ -1,0 +1,5 @@
+/build/
+.DS_Store
+.idea/
+Tetris.iml
+SaveGame.txt
