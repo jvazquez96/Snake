@@ -323,13 +323,11 @@ public class SnakeGame extends JFrame {
 			//score += nextFruitScore
                         score += collision.getValue();
 			spawnFruit();
-		} else if(collision == TileType.SnakeBody) {
+		} else if(collision == TileType.SnakeBody || collision == TileType.BadFruit) {
 			isGameOver = true;
 			logicTimer.setPaused(true);
-		} else if(nextFruitScore > 10) {
-			//nextFruitScore--;
-                        
-		}
+		} 
+                
 	}
 	
 	/**
@@ -434,6 +432,7 @@ public class SnakeGame extends JFrame {
 		 */
 		this.isNewGame = false;
 		this.isGameOver = false;
+                this.bInit = true;
 		
 		/*
 		 * Create the head at the center of the board.
@@ -468,6 +467,10 @@ public class SnakeGame extends JFrame {
 		 * Spawn a new fruit.
 		 */
 		spawnFruit();
+                /*
+                 * Spawn bads fruits.
+                */
+                spawnBadFruits();
 	}
 	
 	/**
@@ -515,7 +518,15 @@ public class SnakeGame extends JFrame {
 		 * size of the snake.
 		 */
                 if (bInit){
+                    spawnMultipleFruits();
+                }else{
+                    spawnOneFruit();
+                }
+	}
+	
+        private void spawnMultipleFruits(){
                 int iCounter = 3;
+                int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
                 while (iCounter > 0){
                 //Randomize the value for the each fruit
                 this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
@@ -534,26 +545,51 @@ public class SnakeGame extends JFrame {
                 --iCounter;
                 index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
                 }
-                bInit = false;
-                }else{
-                //Randomize the value for the each fruit
-                this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
-                int freeFound = -1;
-                index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
-		for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
-			for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
-				TileType type = board.getTile(x, y);
-				if(type == null || type == TileType.Fruit) {
-					if(++freeFound == index) {
-						board.setTile(x, y, TileType.Fruit,nextFruitScore);
-						break;
-					}
-				}
+                bInit = false; 
+        }
+        
+        
+        private void spawnOneFruit(){
+            //Randomize the value for one fruit
+            this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
+            int freeFound = -1;
+            int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+            for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
+		for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
+                    TileType type = board.getTile(x, y);
+                    if(type == null || type == TileType.Fruit) {
+			if(++freeFound == index) {
+			board.setTile(x, y, TileType.Fruit,nextFruitScore);
+			break;
 			}
-		}   
+                    }
+		}
+            }   
+        }
+        
+        private void spawnBadFruits(){
+            int iCounter = 3;
+            int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+            while (iCounter > 0){
+            int freeFound = -1;
+            for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
+                for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
+                    TileType type = board.getTile(x, y);
+                    if(type == null || type == TileType.BadFruit) {
+			if(++freeFound == index) {
+                            board.setTile(x, y, TileType.BadFruit,-1);    
+                            break;
+			}
+                    }
                 }
-	}
-	
+            }
+            --iCounter;
+            index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+            }
+            
+        }
+            
+                
 	/**
 	 * Gets the current score.
 	 * @return The score.

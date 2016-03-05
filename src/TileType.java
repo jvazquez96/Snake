@@ -8,6 +8,8 @@
 public enum TileType {
 
 	Fruit(0),
+        
+        BadFruit(0),
 
 	SnakeHead(0),
 	

@@ -214,7 +214,16 @@ public class BoardPanel extends JPanel {
 			g.setColor(Color.RED);
 			g.fillOval(x + 2, y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
 			break;
-			
+                        
+                /*
+                 * A bad fruit is depicted as a small blue circe that with a bit of padding
+                 * on each side
+                 */
+                case BadFruit:
+                        g.setColor(Color.BLUE);
+                        g.fillOval(x + 2, y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+                        break;
+                        
 		/*
 		 * The snake body is depicted as a green square that takes up the
 		 * entire tile.
