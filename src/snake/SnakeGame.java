@@ -663,12 +663,12 @@ public class SnakeGame extends JFrame implements Serializable{
             //this.directions.addLast(directions);
         }
         public void setSnake(LinkedList<Point> snake){
-            //this.snake.clear();
+            this.snake.clear();
             this.snake = snake;
         }
-        public void setBoard(BoardPanel aboard){
-            //this.board.clearBoard();
-            this.board = aboard;
+        public void setBoard(BoardPanel board){
+            this.board.clearBoard();
+            this.board = board;
         }
 	/**
 	 * Entry point of the program.

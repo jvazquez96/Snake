@@ -61,7 +61,7 @@ public class StateHandler {
         objOut.writeObject(snakeGame.getFruitsEaten());
         objOut.writeObject(snakeGame.getDirection());
         objOut.writeObject(snakeGame.getSnake());
-        objOut.writeObject(snakeGame.getBoard());
+        objOut.writeObject(snakeGame.getBoard().getT());
     }
     private static void readVariables(SnakeGame snakeGame, ObjectInputStream objIn) throws IOException, ClassNotFoundException{
         snakeGame.setNewGame((boolean) objIn.readObject());
@@ -71,7 +71,7 @@ public class StateHandler {
         snakeGame.setFruitsEaten((int) objIn.readObject());
         snakeGame.setDirection((Direction) objIn.readObject());
         snakeGame.setSnake((LinkedList<Point>) objIn.readObject());
-        snakeGame.setBoard((BoardPanel) objIn.readObject());
+        snakeGame.getBoard().setTiles((TileType[]) objIn.readObject());
        
     }
 }

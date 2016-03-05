@@ -68,6 +68,13 @@ public class BoardPanel extends JPanel implements Serializable {
 	 * The array of tiles that make up this board.
 	 */
 	private TileType[] tiles;
+        
+        public void setTiles(TileType[] tilMat){
+            this.tiles = tilMat;
+        }
+        public TileType[] getT(){
+            return tiles;
+        }
 
 	/**
 	 * Creates a new BoardPanel instance.
