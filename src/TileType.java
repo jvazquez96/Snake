@@ -7,11 +7,21 @@
  */
 public enum TileType {
 
-	Fruit,
+	Fruit(0),
+
+	SnakeHead(0),
 	
-	SnakeHead,
-	
-	SnakeBody
+	SnakeBody(0);
+        private int iValue;
+        public int getValue(){
+            return iValue;
+        }
+        public void setValue(int iValue){
+            this.iValue = iValue;
+        }
+        private TileType(int iValue){
+            this.iValue = iValue;
+        }
 	
 }
 

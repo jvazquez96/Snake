@@ -15,6 +15,8 @@ import javax.swing.JFrame;
  */
 public class SnakeGame extends JFrame {
 		
+        private int iX;
+        private int iY;
 	/**
 	 * The Serial Version UID.
 	 */
@@ -98,6 +100,7 @@ public class SnakeGame extends JFrame {
 	 */
 	private int nextFruitScore;
 	
+        private boolean bInit;
 	/**
 	 * Creates a new SnakeGame instance. Creates a new window,
 	 * and sets up the controller input.
@@ -107,6 +110,7 @@ public class SnakeGame extends JFrame {
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
+                bInit = true;
 				
 		/*
 		 * Initialize the game's panels and add them to the window.
@@ -316,13 +320,15 @@ public class SnakeGame extends JFrame {
 		 */
 		if(collision == TileType.Fruit) {
 			fruitsEaten++;
-			score += nextFruitScore;
+			//score += nextFruitScore
+                        score += collision.getValue();
 			spawnFruit();
 		} else if(collision == TileType.SnakeBody) {
 			isGameOver = true;
 			logicTimer.setPaused(true);
 		} else if(nextFruitScore > 10) {
-			nextFruitScore--;
+			//nextFruitScore--;
+                        
 		}
 	}
 	
@@ -384,7 +390,9 @@ public class SnakeGame extends JFrame {
 		TileType old = board.getTile(head.x, head.y);
 		if(old != TileType.Fruit && snake.size() > MIN_SNAKE_LENGTH) {
 			Point tail = snake.removeLast();
-			board.setTile(tail, null);
+                        iX = head.x;
+                        iY = head.y;
+			board.setTile(tail, null,0);
 			old = board.getTile(head.x, head.y);
 		}
 		
@@ -400,14 +408,13 @@ public class SnakeGame extends JFrame {
 		 * input.
 		 */
 		if(old != TileType.SnakeBody) {
-			board.setTile(snake.peekFirst(), TileType.SnakeBody);
+			board.setTile(snake.peekFirst(), TileType.SnakeBody,0);
 			snake.push(head);
-			board.setTile(head, TileType.SnakeHead);
+			board.setTile(head, TileType.SnakeHead,0);
 			if(directions.size() > 1) {
 				directions.poll();
 			}
 		}
-				
 		return old;
 	}
 	
@@ -443,7 +450,7 @@ public class SnakeGame extends JFrame {
 		 * Clear the board and add the head.
 		 */
 		board.clearBoard();
-		board.setTile(head, TileType.SnakeHead);
+		board.setTile(head, TileType.SnakeHead,0);
 		
 		/*
 		 * Clear the directions and add north as the
@@ -491,9 +498,7 @@ public class SnakeGame extends JFrame {
 	 * Spawns a new fruit onto the board.
 	 */
 	private void spawnFruit() {
-		//Reset the score for this fruit to 100.
-		this.nextFruitScore = 100;
-
+                
 		/*
 		 * Get a random index based on the number of free spaces left on the board.
 		 */
@@ -509,18 +514,44 @@ public class SnakeGame extends JFrame {
 		 * locate an index at a relatively constant rate regardless of the
 		 * size of the snake.
 		 */
+                if (bInit){
+                int iCounter = 3;
+                while (iCounter > 0){
+                //Randomize the value for the each fruit
+                this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
 		int freeFound = -1;
 		for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
 			for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
 				TileType type = board.getTile(x, y);
 				if(type == null || type == TileType.Fruit) {
 					if(++freeFound == index) {
-						board.setTile(x, y, TileType.Fruit);
+						board.setTile(x, y, TileType.Fruit,nextFruitScore);    
 						break;
 					}
 				}
 			}
 		}
+                --iCounter;
+                index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+                }
+                bInit = false;
+                }else{
+                //Randomize the value for the each fruit
+                this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
+                int freeFound = -1;
+                index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+		for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
+			for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
+				TileType type = board.getTile(x, y);
+				if(type == null || type == TileType.Fruit) {
+					if(++freeFound == index) {
+						board.setTile(x, y, TileType.Fruit,nextFruitScore);
+						break;
+					}
+				}
+			}
+		}   
+                }
 	}
 	
 	/**

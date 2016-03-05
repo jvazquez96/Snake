@@ -66,7 +66,7 @@ public class BoardPanel extends JPanel {
 	 * The array of tiles that make up this board.
 	 */
 	private TileType[] tiles;
-		
+
 	/**
 	 * Creates a new BoardPanel instance.
 	 * @param game The SnakeGame instance.
@@ -93,8 +93,8 @@ public class BoardPanel extends JPanel {
 	 * @param point The coordinate of the tile.
 	 * @param type The type to set the tile to.
 	 */
-	public void setTile(Point point, TileType type) {
-		setTile(point.x, point.y, type);
+	public void setTile(Point point, TileType type, int iValue) {
+		setTile(point.x, point.y, type, iValue);
 	}
 	
 	/**
@@ -103,8 +103,11 @@ public class BoardPanel extends JPanel {
 	 * @param y The y coordinate of the tile.
 	 * @param type The type to set the tile to.
 	 */
-	public void setTile(int x, int y, TileType type) {
-		tiles[y * ROW_COUNT + x] = type;
+	public void setTile(int x, int y, TileType type, int iValue) {
+		tiles[y * ROW_COUNT + x] = type;  
+                if (type != null){
+                    type.setValue(iValue);
+                }
 	}
 	
 	/**
@@ -116,7 +119,7 @@ public class BoardPanel extends JPanel {
 	public TileType getTile(int x, int y) {
 		return tiles[y * ROW_COUNT + x];
 	}
-	
+        
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
