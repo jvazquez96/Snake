@@ -1,3 +1,6 @@
+package snake;
+
+import java.io.Serializable;
 
 /**
  * The {@code Clock} class is responsible for tracking the number of cycles
@@ -5,7 +8,7 @@
  * @author Brendan Jones
  *
  */
-public class Clock {
+public class Clock implements Serializable {
 	
 	/**
 	 * The number of milliseconds that make up one cycle.

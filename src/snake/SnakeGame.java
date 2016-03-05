@@ -1,3 +1,5 @@
+package snake;
+
 
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -5,18 +7,19 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.Random;
+import java.io.Serializable;
 
 import javax.swing.JFrame;
 
+import static  snake.StateHandler.saveGame;
+import static snake.StateHandler.loadGame;
 /**
  * The {@code SnakeGame} class is responsible for handling much of the game's logic.
  * @author Brendan Jones
  *
  */
-public class SnakeGame extends JFrame {
+public class SnakeGame extends JFrame implements Serializable{
 		
-        private int iX;
-        private int iY;
 	/**
 	 * The Serial Version UID.
 	 */
@@ -60,6 +63,7 @@ public class SnakeGame extends JFrame {
 	 */
 	private Clock logicTimer;
 	
+        
 	/**
 	 * Whether or not we're running a new game.
 	 */
@@ -225,7 +229,15 @@ public class SnakeGame extends JFrame {
 						resetGame();
 					}
 					break;
+                                case KeyEvent.VK_G:
+                                        saveGame(SnakeGame.this);
+                                        break;
+                                case KeyEvent.VK_C:
+                                        loadGame(SnakeGame.this);
+                                        logicTimer.reset();
+                                        break;
 				}
+                                
 			}
 			
 		});
@@ -324,6 +336,7 @@ public class SnakeGame extends JFrame {
                         score += collision.getValue();
 			spawnFruit();
 		} else if(collision == TileType.SnakeBody || collision == TileType.BadFruit) {
+                        System.out.println("Enters");
 			isGameOver = true;
 			logicTimer.setPaused(true);
 		} 
@@ -388,8 +401,6 @@ public class SnakeGame extends JFrame {
 		TileType old = board.getTile(head.x, head.y);
 		if(old != TileType.Fruit && snake.size() > MIN_SNAKE_LENGTH) {
 			Point tail = snake.removeLast();
-                        iX = head.x;
-                        iY = head.y;
 			board.setTile(tail, null,0);
 			old = board.getTile(head.x, head.y);
 		}
@@ -588,8 +599,7 @@ public class SnakeGame extends JFrame {
             }
             
         }
-            
-                
+  
 	/**
 	 * Gets the current score.
 	 * @return The score.
@@ -621,7 +631,45 @@ public class SnakeGame extends JFrame {
 	public Direction getDirection() {
 		return directions.peek();
 	}
-	
+	public LinkedList getSnake(){
+            return snake;
+        }
+        public BoardPanel getBoard(){
+            return this.board;
+        }
+        
+        public void setNewGame(boolean isNewGame){
+            this.isNewGame = isNewGame;
+        }
+        public void setIsGameOver(boolean isGameOver){
+            if (isGameOver){
+                System.out.println("True");
+            }else{
+                System.out.println("False");
+            }
+            this.isGameOver = isGameOver;
+        }
+        public void setIsPaused(boolean isPaused){
+            this.isPaused = isPaused;
+        }
+        public void setScore(int score){
+            this.score = score;
+        }
+        public void setFruitsEaten(int fruitsEaten){
+            this.fruitsEaten = fruitsEaten;
+        }
+        public void setDirection(Direction directions){
+            this.directions.addFirst(directions);
+            //this.directions.addLast(directions);
+        }
+        public void setSnake(LinkedList<Point> snake){
+            //this.snake.clear();
+            this.snake = snake;
+        }
+        public void setBoard(BoardPanel aboard){
+            //this.board.clearBoard();
+            this.board = aboard;
+        }
 	/**
 	 * Entry point of the program.
 	 * @param args Unused.

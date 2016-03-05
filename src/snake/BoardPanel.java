@@ -1,10 +1,12 @@
+package snake;
+
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
-
+import java.io.Serializable;
 import javax.swing.JPanel;
 
 /**
@@ -13,7 +15,7 @@ import javax.swing.JPanel;
  * @author Brendan Jones
  *
  */
-public class BoardPanel extends JPanel {
+public class BoardPanel extends JPanel implements Serializable {
 	
 	/**
 	 * Serial Version UID.

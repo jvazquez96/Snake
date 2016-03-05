@@ -1,3 +1,5 @@
+package snake;
+
 
 /**
  * The {@code TileType} class represents the different
