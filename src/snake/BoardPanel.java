@@ -102,8 +102,8 @@ public class BoardPanel extends JPanel implements Serializable {
 	 * @param point The coordinate of the tile.
 	 * @param type The type to set the tile to.
 	 */
-	public void setTile(Point point, TileType type, int iValue) {
-		setTile(point.x, point.y, type, iValue);
+	public void setTile(Point point, TileType type) {
+		setTile(point.x, point.y, type,0);
 	}
 	
 	/**

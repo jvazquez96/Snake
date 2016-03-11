@@ -105,6 +105,8 @@ public class SnakeGame extends JFrame implements Serializable{
 	private int nextFruitScore;
 	
         private boolean bInit;
+        
+        private int iFactor;
 	/**
 	 * Creates a new SnakeGame instance. Creates a new window,
 	 * and sets up the controller input.
@@ -333,7 +335,9 @@ public class SnakeGame extends JFrame implements Serializable{
 		if(collision == TileType.Fruit) {
 			fruitsEaten++;
                         score += nextFruitScore * collision.getValue();
+                        System.out.println(collision.getValue());
                         //score += collision.getValue();
+                        iFactor = collision.getValue();
 			spawnFruit();
 		} else if(collision == TileType.SnakeBody || collision == TileType.BadFruit) {
                         //System.out.println("Enters");
@@ -403,7 +407,7 @@ public class SnakeGame extends JFrame implements Serializable{
 		TileType old = board.getTile(head.x, head.y);
 		if(old != TileType.Fruit && snake.size() > MIN_SNAKE_LENGTH) {
 			Point tail = snake.removeLast();
-			board.setTile(tail, null,0);
+			board.setTile(tail, null);
 			old = board.getTile(head.x, head.y);
 		}
 		
@@ -419,9 +423,9 @@ public class SnakeGame extends JFrame implements Serializable{
 		 * input.
 		 */
 		if(old != TileType.SnakeBody) {
-			board.setTile(snake.peekFirst(), TileType.SnakeBody,0);
+			board.setTile(snake.peekFirst(), TileType.SnakeBody);
 			snake.push(head);
-			board.setTile(head, TileType.SnakeHead,0);
+			board.setTile(head, TileType.SnakeHead);
 			if(directions.size() > 1) {
 				directions.poll();
 			}
@@ -462,7 +466,7 @@ public class SnakeGame extends JFrame implements Serializable{
 		 * Clear the board and add the head.
 		 */
 		board.clearBoard();
-		board.setTile(head, TileType.SnakeHead,0);
+		board.setTile(head, TileType.SnakeHead);
 		
 		/*
 		 * Clear the directions and add north as the
@@ -541,9 +545,8 @@ public class SnakeGame extends JFrame implements Serializable{
                 int iCounter = 3;
                 int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
                 while (iCounter > 0){
-                //Randomize the value for the each fruit
-                //this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
                 this.nextFruitScore = 100;
+                //Randomize the factor for each value
                 int iRandom = (int) (Math.random() * ((4-1) + 1) + 1);
 		int freeFound = -1;
 		for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
@@ -560,7 +563,8 @@ public class SnakeGame extends JFrame implements Serializable{
                 --iCounter;
                 index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
                 }
-                bInit = false; 
+                bInit = false;
+                
         }
         
         
@@ -581,7 +585,20 @@ public class SnakeGame extends JFrame implements Serializable{
 			}
                     }
 		}
-            }   
+            }
+            System.out.println(iFactor);
+            for (int iC = 0; iC < iFactor;++iC){
+                System.out.println("Enters");
+                Point head = new Point(snake.peekFirst());
+                TileType tilOld = board.getTile(head.x,head.y);
+                board.setTile(snake.peekFirst(),TileType.SnakeBody);
+                snake.push(head);
+                board.setTile(head, TileType.SnakeHead);
+                if (directions.size() > 1){
+                    directions.poll();
+                }
+                
+            }
         }
         
         private void spawnBadFruits(){
