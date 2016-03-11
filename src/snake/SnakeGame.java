@@ -332,14 +332,16 @@ public class SnakeGame extends JFrame implements Serializable{
 		 */
 		if(collision == TileType.Fruit) {
 			fruitsEaten++;
-			//score += nextFruitScore
-                        score += collision.getValue();
+                        score += nextFruitScore * collision.getValue();
+                        //score += collision.getValue();
 			spawnFruit();
 		} else if(collision == TileType.SnakeBody || collision == TileType.BadFruit) {
-                        System.out.println("Enters");
+                        //System.out.println("Enters");
 			isGameOver = true;
 			logicTimer.setPaused(true);
-		} 
+		} else if(nextFruitScore > 10) {
+			nextFruitScore--;
+		}
                 
 	}
 	
@@ -540,14 +542,16 @@ public class SnakeGame extends JFrame implements Serializable{
                 int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
                 while (iCounter > 0){
                 //Randomize the value for the each fruit
-                this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
+                //this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
+                this.nextFruitScore = 100;
+                int iRandom = (int) (Math.random() * ((4-1) + 1) + 1);
 		int freeFound = -1;
 		for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
 			for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
 				TileType type = board.getTile(x, y);
 				if(type == null || type == TileType.Fruit) {
 					if(++freeFound == index) {
-						board.setTile(x, y, TileType.Fruit,nextFruitScore);    
+						board.setTile(x, y, TileType.Fruit,iRandom);    
 						break;
 					}
 				}
@@ -562,7 +566,9 @@ public class SnakeGame extends JFrame implements Serializable{
         
         private void spawnOneFruit(){
             //Randomize the value for one fruit
-            this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
+            //this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
+            this.nextFruitScore = 100;
+            int iRandom = (int) (Math.random() * ((4-1) + 1) + 1);
             int freeFound = -1;
             int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
             for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
@@ -570,8 +576,8 @@ public class SnakeGame extends JFrame implements Serializable{
                     TileType type = board.getTile(x, y);
                     if(type == null || type == TileType.Fruit) {
 			if(++freeFound == index) {
-			board.setTile(x, y, TileType.Fruit,nextFruitScore);
-			break;
+                            board.setTile(x, y, TileType.Fruit,iRandom);
+                            break;
 			}
                     }
 		}
