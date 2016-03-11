@@ -3,3 +3,6 @@
 .idea/
 Tetris.iml
 SaveGame.txt
+/nbproject/private/
+/out/
+Snake.iml

@@ -1,3 +1,5 @@
+package snake;
+
 
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -5,15 +7,18 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.Random;
+import java.io.Serializable;
 
 import javax.swing.JFrame;
 
+import static  snake.StateHandler.saveGame;
+import static snake.StateHandler.loadGame;
 /**
  * The {@code SnakeGame} class is responsible for handling much of the game's logic.
  * @author Brendan Jones
  *
  */
-public class SnakeGame extends JFrame {
+public class SnakeGame extends JFrame implements Serializable{
 		
 	/**
 	 * The Serial Version UID.
@@ -58,6 +63,7 @@ public class SnakeGame extends JFrame {
 	 */
 	private Clock logicTimer;
 	
+        
 	/**
 	 * Whether or not we're running a new game.
 	 */
@@ -98,6 +104,9 @@ public class SnakeGame extends JFrame {
 	 */
 	private int nextFruitScore;
 	
+        private boolean bInit;
+        
+        private int iFactor;
 	/**
 	 * Creates a new SnakeGame instance. Creates a new window,
 	 * and sets up the controller input.
@@ -107,6 +116,7 @@ public class SnakeGame extends JFrame {
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
+                bInit = true;
 				
 		/*
 		 * Initialize the game's panels and add them to the window.
@@ -221,7 +231,15 @@ public class SnakeGame extends JFrame {
 						resetGame();
 					}
 					break;
+                                case KeyEvent.VK_G:
+                                        saveGame(SnakeGame.this);
+                                        break;
+                                case KeyEvent.VK_C:
+                                        loadGame(SnakeGame.this);
+                                        logicTimer.reset();
+                                        break;
 				}
+                                
 			}
 			
 		});
@@ -316,14 +334,19 @@ public class SnakeGame extends JFrame {
 		 */
 		if(collision == TileType.Fruit) {
 			fruitsEaten++;
-			score += nextFruitScore;
+                        score += nextFruitScore * collision.getValue();
+                        System.out.println(collision.getValue());
+                        //score += collision.getValue();
+                        iFactor = collision.getValue();
 			spawnFruit();
-		} else if(collision == TileType.SnakeBody) {
+		} else if(collision == TileType.SnakeBody || collision == TileType.BadFruit) {
+                        //System.out.println("Enters");
 			isGameOver = true;
 			logicTimer.setPaused(true);
 		} else if(nextFruitScore > 10) {
 			nextFruitScore--;
 		}
+                
 	}
 	
 	/**
@@ -407,7 +430,6 @@ public class SnakeGame extends JFrame {
 				directions.poll();
 			}
 		}
-				
 		return old;
 	}
 	
@@ -427,6 +449,7 @@ public class SnakeGame extends JFrame {
 		 */
 		this.isNewGame = false;
 		this.isGameOver = false;
+                this.bInit = true;
 		
 		/*
 		 * Create the head at the center of the board.
@@ -461,6 +484,10 @@ public class SnakeGame extends JFrame {
 		 * Spawn a new fruit.
 		 */
 		spawnFruit();
+                /*
+                 * Spawn bads fruits.
+                */
+                spawnBadFruits();
 	}
 	
 	/**
@@ -491,9 +518,7 @@ public class SnakeGame extends JFrame {
 	 * Spawns a new fruit onto the board.
 	 */
 	private void spawnFruit() {
-		//Reset the score for this fruit to 100.
-		this.nextFruitScore = 100;
-
+                
 		/*
 		 * Get a random index based on the number of free spaces left on the board.
 		 */
@@ -509,20 +534,95 @@ public class SnakeGame extends JFrame {
 		 * locate an index at a relatively constant rate regardless of the
 		 * size of the snake.
 		 */
+                if (bInit){
+                    spawnMultipleFruits();
+                }else{
+                    spawnOneFruit();
+                }
+	}
+	
+        private void spawnMultipleFruits(){
+                int iCounter = 3;
+                int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+                while (iCounter > 0){
+                this.nextFruitScore = 100;
+                //Randomize the factor for each value
+                int iRandom = (int) (Math.random() * ((4-1) + 1) + 1);
 		int freeFound = -1;
 		for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
 			for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
 				TileType type = board.getTile(x, y);
 				if(type == null || type == TileType.Fruit) {
 					if(++freeFound == index) {
-						board.setTile(x, y, TileType.Fruit);
+						board.setTile(x, y, TileType.Fruit,iRandom);    
 						break;
 					}
 				}
 			}
 		}
-	}
-	
+                --iCounter;
+                index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+                }
+                bInit = false;
+                
+        }
+        
+        
+        private void spawnOneFruit(){
+            //Randomize the value for one fruit
+            //this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
+            this.nextFruitScore = 100;
+            int iRandom = (int) (Math.random() * ((4-1) + 1) + 1);
+            int freeFound = -1;
+            int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+            for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
+		for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
+                    TileType type = board.getTile(x, y);
+                    if(type == null || type == TileType.Fruit) {
+			if(++freeFound == index) {
+                            board.setTile(x, y, TileType.Fruit,iRandom);
+                            break;
+			}
+                    }
+		}
+            }
+            System.out.println(iFactor);
+            for (int iC = 0; iC < iFactor;++iC){
+                System.out.println("Enters");
+                Point head = new Point(snake.peekFirst());
+                TileType tilOld = board.getTile(head.x,head.y);
+                board.setTile(snake.peekFirst(),TileType.SnakeBody);
+                snake.push(head);
+                board.setTile(head, TileType.SnakeHead);
+                if (directions.size() > 1){
+                    directions.poll();
+                }
+                
+            }
+        }
+        
+        private void spawnBadFruits(){
+            int iCounter = 3;
+            int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+            while (iCounter > 0){
+            int freeFound = -1;
+            for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
+                for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
+                    TileType type = board.getTile(x, y);
+                    if(type == null || type == TileType.BadFruit) {
+			if(++freeFound == index) {
+                            board.setTile(x, y, TileType.BadFruit,-1);    
+                            break;
+			}
+                    }
+                }
+            }
+            --iCounter;
+            index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+            }
+            
+        }
+  
 	/**
 	 * Gets the current score.
 	 * @return The score.
@@ -554,7 +654,45 @@ public class SnakeGame extends JFrame {
 	public Direction getDirection() {
 		return directions.peek();
 	}
-	
+	public LinkedList getSnake(){
+            return snake;
+        }
+        public BoardPanel getBoard(){
+            return this.board;
+        }
+        
+        public void setNewGame(boolean isNewGame){
+            this.isNewGame = isNewGame;
+        }
+        public void setIsGameOver(boolean isGameOver){
+            if (isGameOver){
+                System.out.println("True");
+            }else{
+                System.out.println("False");
+            }
+            this.isGameOver = isGameOver;
+        }
+        public void setIsPaused(boolean isPaused){
+            this.isPaused = isPaused;
+        }
+        public void setScore(int score){
+            this.score = score;
+        }
+        public void setFruitsEaten(int fruitsEaten){
+            this.fruitsEaten = fruitsEaten;
+        }
+        public void setDirection(Direction directions){
+            this.directions.addFirst(directions);
+            //this.directions.addLast(directions);
+        }
+        public void setSnake(LinkedList<Point> snake){
+            this.snake.clear();
+            this.snake = snake;
+        }
+        public void setBoard(BoardPanel board){
+            this.board.clearBoard();
+            this.board = board;
+        }
 	/**
 	 * Entry point of the program.
 	 * @param args Unused.

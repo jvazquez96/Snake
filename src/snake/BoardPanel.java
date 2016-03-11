@@ -1,10 +1,12 @@
+package snake;
+
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
-
+import java.io.Serializable;
 import javax.swing.JPanel;
 
 /**
@@ -13,7 +15,7 @@ import javax.swing.JPanel;
  * @author Brendan Jones
  *
  */
-public class BoardPanel extends JPanel {
+public class BoardPanel extends JPanel implements Serializable {
 	
 	/**
 	 * Serial Version UID.
@@ -66,7 +68,14 @@ public class BoardPanel extends JPanel {
 	 * The array of tiles that make up this board.
 	 */
 	private TileType[] tiles;
-		
+        
+        public void setTiles(TileType[] tilMat){
+            this.tiles = tilMat;
+        }
+        public TileType[] getT(){
+            return tiles;
+        }
+
 	/**
 	 * Creates a new BoardPanel instance.
 	 * @param game The SnakeGame instance.
@@ -94,7 +103,7 @@ public class BoardPanel extends JPanel {
 	 * @param type The type to set the tile to.
 	 */
 	public void setTile(Point point, TileType type) {
-		setTile(point.x, point.y, type);
+		setTile(point.x, point.y, type,0);
 	}
 	
 	/**
@@ -103,8 +112,11 @@ public class BoardPanel extends JPanel {
 	 * @param y The y coordinate of the tile.
 	 * @param type The type to set the tile to.
 	 */
-	public void setTile(int x, int y, TileType type) {
-		tiles[y * ROW_COUNT + x] = type;
+	public void setTile(int x, int y, TileType type, int iValue) {
+		tiles[y * ROW_COUNT + x] = type;  
+                if (type != null){
+                    type.setValue(iValue);
+                }
 	}
 	
 	/**
@@ -116,7 +128,7 @@ public class BoardPanel extends JPanel {
 	public TileType getTile(int x, int y) {
 		return tiles[y * ROW_COUNT + x];
 	}
-	
+        
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -211,7 +223,16 @@ public class BoardPanel extends JPanel {
 			g.setColor(Color.RED);
 			g.fillOval(x + 2, y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
 			break;
-			
+                        
+                /*
+                 * A bad fruit is depicted as a small blue circe that with a bit of padding
+                 * on each side
+                 */
+                case BadFruit:
+                        g.setColor(Color.BLUE);
+                        g.fillOval(x + 2, y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+                        break;
+                        
 		/*
 		 * The snake body is depicted as a green square that takes up the
 		 * entire tile.
