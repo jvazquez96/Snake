@@ -15,38 +15,38 @@ public class SidePanel extends JPanel {
     /**
      * Serial Version UID.
      */
-    private static final long serialVersionUID = -40557434900946408L;
+    private static final long lSerialVersionUID = -40557434900946408L;
 
     /**
      * The large font to draw with.
      */
-    private static final Font LARGE_FONT = new Font("Tahoma", Font.BOLD, 20);
+    private static final Font fLARGE_FONT = new Font("Tahoma", Font.BOLD, 20);
 
     /**
      * The medium font to draw with.
      */
-    private static final Font MEDIUM_FONT = new Font("Tahoma", Font.BOLD, 16);
+    private static final Font fMEDIUM_FONT = new Font("Tahoma", Font.BOLD, 16);
 
     /**
      * The small font to draw with.
      */
-    private static final Font SMALL_FONT = new Font("Tahoma", Font.BOLD, 12);
+    private static final Font fSMALL_FONT = new Font("Tahoma", Font.BOLD, 12);
 
     /**
      * The SnakeGame instance.
      */
-    private SnakeGame game;
+    private SnakeGame snkGame;
 
     /**
      * Creates a new SidePanel instance.
      *
-     * @param game The SnakeGame instance.
+     * @param snkGame The SnakeGame instance.
      */
-    public SidePanel(SnakeGame game) {
-        this.game = game;
+    public SidePanel(SnakeGame snkGame) {
+        this.snkGame = snkGame;
 
         setPreferredSize(new Dimension(300,
-                                       BoardPanel.ROW_COUNT * BoardPanel.TILE_SIZE));
+                                       BoardPanel.iROW_COUNT * BoardPanel.iTILE_SIZE));
         setBackground(Color.DARK_GRAY.darker().darker());
     }
 
@@ -72,7 +72,7 @@ public class SidePanel extends JPanel {
         /*
          * Draw the game name onto the window.
          */
-        g.setFont(LARGE_FONT);
+        g.setFont(fLARGE_FONT);
 
         drawWithShadow(g,
                        getWidth() / 2 - g.getFontMetrics()
@@ -82,39 +82,39 @@ public class SidePanel extends JPanel {
         /*
          * Draw the categories onto the window.
          */
-        g.setFont(MEDIUM_FONT);
+        g.setFont(fMEDIUM_FONT);
         drawWithShadow(g, SMALL_OFFSET, STATISTICS_OFFSET, "Statistics");
         drawWithShadow(g, SMALL_OFFSET, CONTROLS_OFFSET, "Controls");
 
         /*
          * Draw the category content onto the window.
          */
-        g.setFont(SMALL_FONT);
+        g.setFont(fSMALL_FONT);
 
         //Draw the content for the statistics category.
         int drawY = STATISTICS_OFFSET;
-        g.drawString("Total Score: " + game.getScore(),
+        g.drawString("Total Score: " + snkGame.getScore(),
                      LARGE_OFFSET,
                      drawY += MESSAGE_STRIDE);
-        g.drawString("Fruit Eaten: " + game.getFruitsEaten(),
+        g.drawString("Fruit Eaten: " + snkGame.getFruitsEaten(),
                      LARGE_OFFSET,
                      drawY += MESSAGE_STRIDE);
         g.drawString("Fruit Score: ", LARGE_OFFSET, drawY += MESSAGE_STRIDE);
         // Draw the score in a color that depends on the value of it
-        if (game.getNextFruitScore() > 72) {
+        if (snkGame.getNextFruitScore() > 72) {
             g.setColor(Color.GREEN.darker());
         }
         else {
-            if (game.getNextFruitScore() > 30) {
+            if (snkGame.getNextFruitScore() > 30) {
                 g.setColor(Color.YELLOW);
             }
             else {
-                if (game.getNextFruitScore() > 0) {
+                if (snkGame.getNextFruitScore() > 0) {
                     g.setColor(Color.RED.darker());
                 }
             }
         }
-        g.drawString("" + game.getNextFruitScore(), LARGE_OFFSET + 75, drawY);
+        g.drawString("" + snkGame.getNextFruitScore(), LARGE_OFFSET + 75, drawY);
         g.setColor(Color.WHITE);
         //Draw the content for the controls category.
         drawY = CONTROLS_OFFSET;

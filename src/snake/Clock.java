@@ -13,23 +13,23 @@ public class Clock implements Serializable {
     /**
      * The number of milliseconds that make up one cycle.
      */
-    private float millisPerCycle;
+    private float fMillisPerCycle;
 
     /**
      * The last time that the clock was updated (used for calculating the
      * delta time).
      */
-    private long lastUpdate;
+    private long lLastUpdate;
 
     /**
      * The number of cycles that have elapsed and have not yet been polled.
      */
-    private int elapsedCycles;
+    private int iElapsedCycles;
 
     /**
      * The amount of excess time towards the next elapsed cycle.
      */
-    private float excessCycles;
+    private float fExcessCycles;
 
     /**
      * Whether or not the clock is paused.
@@ -52,7 +52,7 @@ public class Clock implements Serializable {
      * @param cyclesPerSecond The number of cycles per second.
      */
     public void setCyclesPerSecond(float cyclesPerSecond) {
-        this.millisPerCycle = (1.0f / cyclesPerSecond) * 1000;
+        this.fMillisPerCycle = (1.0f / cyclesPerSecond) * 1000;
     }
 
     /**
@@ -61,9 +61,9 @@ public class Clock implements Serializable {
      * paused flag will be set to false.
      */
     public void reset() {
-        this.elapsedCycles = 0;
-        this.excessCycles = 0.0f;
-        this.lastUpdate = getCurrentTime();
+        this.iElapsedCycles = 0;
+        this.fExcessCycles = 0.0f;
+        this.lLastUpdate = getCurrentTime();
         this.isPaused = false;
     }
 
@@ -76,16 +76,16 @@ public class Clock implements Serializable {
     public void update() {
         //Get the current time and calculate the delta time.
         long currUpdate = getCurrentTime();
-        float delta = (float) (currUpdate - lastUpdate) + excessCycles;
+        float delta = (float) (currUpdate - lLastUpdate) + fExcessCycles;
 
         //Update the number of elapsed and excess ticks if we're not paused.
         if (!isPaused) {
-            this.elapsedCycles += (int) Math.floor(delta / millisPerCycle);
-            this.excessCycles = delta % millisPerCycle;
+            this.iElapsedCycles += (int) Math.floor(delta / fMillisPerCycle);
+            this.fExcessCycles = delta % fMillisPerCycle;
         }
 
         //Set the last update time for the next update cycle.
-        this.lastUpdate = currUpdate;
+        this.lLastUpdate = currUpdate;
     }
 
     /**
@@ -116,8 +116,8 @@ public class Clock implements Serializable {
      * @see peekElapsedCycle
      */
     public boolean hasElapsedCycle() {
-        if (elapsedCycles > 0) {
-            this.elapsedCycles--;
+        if (iElapsedCycles > 0) {
+            this.iElapsedCycles--;
             return true;
         }
         return false;
@@ -132,7 +132,7 @@ public class Clock implements Serializable {
      * @see hasElapsedCycle
      */
     public boolean peekElapsedCycle() {
-        return (elapsedCycles > 0);
+        return (iElapsedCycles > 0);
     }
 
     /**

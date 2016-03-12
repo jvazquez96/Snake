@@ -50,12 +50,12 @@ public class SnakeGame extends JFrame implements Serializable {
     /**
      * The SidePanel instance.
      */
-    private SidePanel side;
+    private SidePanel sidSide;
 
     /**
      * The random number generator (used for spawning fruits).
      */
-    private Random random;
+    private Random rRandom;
 
     /**
      * The Clock instance for handling the game logic.
@@ -107,11 +107,67 @@ public class SnakeGame extends JFrame implements Serializable {
      * The number of points that the next fruit will award us.
      */
     private int nextFruitScore;
-
+    /**
+     * Check if we are the first time playing
+     */
     private boolean bInit;
-
+    /**
+     * A random number assigned to each fruit
+     */
     private int iFactor;
 
+    /**
+     * Action when the snake goes up
+     */
+    private void up(){
+        if (!bPaused && !bGameOver) {
+           if (directions.size() < iMAX_DIRECTIONS) {
+                Direction last = directions.peekLast();
+                if (last != Direction.South && last != Direction.North) {
+                    directions.addLast(Direction.North);
+                }
+            }
+        }
+    }
+    /**
+     * Action when the snake goes down
+     */
+    private void down(){
+        if (!bPaused && !bGameOver) {
+           if (directions.size() < iMAX_DIRECTIONS) {
+            Direction last = directions.peekLast();
+                if (last != Direction.North && last != Direction.South) {
+                    directions.addLast(Direction.South);
+                }
+            }
+        }        
+    }
+    /**
+     * Action when the snake goes left
+     */
+    private void left(){
+        if (!bPaused && !bGameOver) {
+            if (directions.size() < iMAX_DIRECTIONS) {
+                Direction last = directions.peekLast();
+                if (last != Direction.East && last != Direction.West) {
+                   directions.addLast(Direction.West);
+                }
+            }
+        }
+    }
+    /**
+     * Action when the snake goes right
+     */
+    private void right(){
+        if (!bPaused && !bGameOver) {
+            if (directions.size() < iMAX_DIRECTIONS) {
+                Direction last = directions.peekLast();
+                if (last != Direction.West && last != Direction.East) {
+                   directions.addLast(Direction.East);
+                }
+            }
+        }    
+    }
     /**
      * Creates a new SnakeGame instance. Creates a new window,
      * and sets up the controller input.
@@ -127,10 +183,10 @@ public class SnakeGame extends JFrame implements Serializable {
          * Initialize the game's panels and add them to the window.
          */
         this.brdBoard = new BoardPanel(this);
-        this.side = new SidePanel(this);
+        this.sidSide = new SidePanel(this);
         this.shaShaker = new ShakeFrame(this);
         add(brdBoard, BorderLayout.CENTER);
-        add(side, BorderLayout.EAST);
+        add(sidSide, BorderLayout.EAST);
 
         /*
          * Adds a new key listener to the frame to process input.
@@ -149,14 +205,7 @@ public class SnakeGame extends JFrame implements Serializable {
                      */
                     case KeyEvent.VK_W:
                     case KeyEvent.VK_UP:
-                        if (!bPaused && !bGameOver) {
-                            if (directions.size() < iMAX_DIRECTIONS) {
-                                Direction last = directions.peekLast();
-                                if (last != Direction.South && last != Direction.North) {
-                                    directions.addLast(Direction.North);
-                                }
-                            }
-                        }
+                        up();
                         break;
 
                     /*
@@ -168,14 +217,7 @@ public class SnakeGame extends JFrame implements Serializable {
                      */
                     case KeyEvent.VK_S:
                     case KeyEvent.VK_DOWN:
-                        if (!bPaused && !bGameOver) {
-                            if (directions.size() < iMAX_DIRECTIONS) {
-                                Direction last = directions.peekLast();
-                                if (last != Direction.North && last != Direction.South) {
-                                    directions.addLast(Direction.South);
-                                }
-                            }
-                        }
+                        down();
                         break;
 
                     /*
@@ -187,14 +229,7 @@ public class SnakeGame extends JFrame implements Serializable {
                      */
                     case KeyEvent.VK_A:
                     case KeyEvent.VK_LEFT:
-                        if (!bPaused && !bGameOver) {
-                            if (directions.size() < iMAX_DIRECTIONS) {
-                                Direction last = directions.peekLast();
-                                if (last != Direction.East && last != Direction.West) {
-                                    directions.addLast(Direction.West);
-                                }
-                            }
-                        }
+                        left();
                         break;
 
                     /*
@@ -206,14 +241,7 @@ public class SnakeGame extends JFrame implements Serializable {
                      */
                     case KeyEvent.VK_D:
                     case KeyEvent.VK_RIGHT:
-                        if (!bPaused && !bGameOver) {
-                            if (directions.size() < iMAX_DIRECTIONS) {
-                                Direction last = directions.peekLast();
-                                if (last != Direction.West && last != Direction.East) {
-                                    directions.addLast(Direction.East);
-                                }
-                            }
-                        }
+                        right();
                         break;
 
                     /*
@@ -290,7 +318,7 @@ public class SnakeGame extends JFrame implements Serializable {
         /*
          * Initialize everything we're going to be using.
          */
-        this.random = new Random();
+        this.rRandom = new Random();
         this.snake = new LinkedList<>();
         this.directions = new LinkedList<>();
         this.clkLogicTimer = new Clock(9.0f);
@@ -319,7 +347,7 @@ public class SnakeGame extends JFrame implements Serializable {
 
             //Repaint the board and side panel with the new content.
             brdBoard.repaint();
-            side.repaint();
+            sidSide.repaint();
 
             /*
              * Calculate the delta time between since the start of the frame
@@ -427,7 +455,7 @@ public class SnakeGame extends JFrame implements Serializable {
          * return that it's collided with itself, as both cases are handled
          * identically.
          */
-        if (head.x < 0 || head.x >= BoardPanel.COL_COUNT || head.y < 0 || head.y >= BoardPanel.ROW_COUNT) {
+        if (head.x < 0 || head.x >= BoardPanel.iCOL_COUNT || head.y < 0 || head.y >= BoardPanel.iROW_COUNT) {
             return TileType.SnakeBody; //Pretend we collided with our body.
         }
 
@@ -490,8 +518,8 @@ public class SnakeGame extends JFrame implements Serializable {
         /*
          * Create the head at the center of the board.
          */
-        Point head = new Point(BoardPanel.COL_COUNT / 2,
-                               BoardPanel.ROW_COUNT / 2);
+        Point head = new Point(BoardPanel.iCOL_COUNT / 2,
+                               BoardPanel.iROW_COUNT / 2);
 
         /*
          * Clear the snake list and add the head.
@@ -562,7 +590,7 @@ public class SnakeGame extends JFrame implements Serializable {
         /*
          * Get a random index based on the number of free spaces left on the board.
          */
-        int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake
+        int index = rRandom.nextInt(BoardPanel.iCOL_COUNT * BoardPanel.iROW_COUNT - snake
                 .size());
 
         /*
@@ -585,15 +613,15 @@ public class SnakeGame extends JFrame implements Serializable {
 
     private void spawnMultipleFruits() {
         int iCounter = 3;
-        int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake
+        int index = rRandom.nextInt(BoardPanel.iCOL_COUNT * BoardPanel.iROW_COUNT - snake
                 .size());
         while (iCounter > 0) {
             this.nextFruitScore = 100;
             //Randomize the factor for each value
             int iRandom = (int) (Math.random() * ((4 - 1) + 1) + 1);
             int freeFound = -1;
-            for (int x = 0; x < BoardPanel.COL_COUNT; x++) {
-                for (int y = 0; y < BoardPanel.ROW_COUNT; y++) {
+            for (int x = 0; x < BoardPanel.iCOL_COUNT; x++) {
+                for (int y = 0; y < BoardPanel.iROW_COUNT; y++) {
                     TileType type = brdBoard.getTile(x, y);
                     if (type == null || type == TileType.Fruit) {
                         if (++freeFound == index) {
@@ -604,7 +632,7 @@ public class SnakeGame extends JFrame implements Serializable {
                 }
             }
             --iCounter;
-            index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake
+            index = rRandom.nextInt(BoardPanel.iCOL_COUNT * BoardPanel.iROW_COUNT - snake
                     .size());
         }
         bInit = false;
@@ -618,10 +646,10 @@ public class SnakeGame extends JFrame implements Serializable {
         this.nextFruitScore = 100;
         int iRandom = (int) (Math.random() * ((4 - 1) + 1) + 1);
         int freeFound = -1;
-        int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake
+        int index = rRandom.nextInt(BoardPanel.iCOL_COUNT * BoardPanel.iROW_COUNT - snake
                 .size());
-        for (int x = 0; x < BoardPanel.COL_COUNT; x++) {
-            for (int y = 0; y < BoardPanel.ROW_COUNT; y++) {
+        for (int x = 0; x < BoardPanel.iCOL_COUNT; x++) {
+            for (int y = 0; y < BoardPanel.iROW_COUNT; y++) {
                 TileType type = brdBoard.getTile(x, y);
                 if (type == null || type == TileType.Fruit) {
                     if (++freeFound == index) {
@@ -646,12 +674,12 @@ public class SnakeGame extends JFrame implements Serializable {
 
     private void spawnBadFruits() {
         int iCounter = 3;
-        int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake
+        int index = rRandom.nextInt(BoardPanel.iCOL_COUNT * BoardPanel.iROW_COUNT - snake
                 .size());
         while (iCounter > 0) {
             int freeFound = -1;
-            for (int x = 0; x < BoardPanel.COL_COUNT; x++) {
-                for (int y = 0; y < BoardPanel.ROW_COUNT; y++) {
+            for (int x = 0; x < BoardPanel.iCOL_COUNT; x++) {
+                for (int y = 0; y < BoardPanel.iROW_COUNT; y++) {
                     TileType type = brdBoard.getTile(x, y);
                     if (type == null || type == TileType.BadFruit) {
                         if (++freeFound == index) {
@@ -662,7 +690,7 @@ public class SnakeGame extends JFrame implements Serializable {
                 }
             }
             --iCounter;
-            index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake
+            index = rRandom.nextInt(BoardPanel.iCOL_COUNT * BoardPanel.iROW_COUNT - snake
                     .size());
         }
 

@@ -24,18 +24,18 @@ public class BoardPanel extends JPanel implements Serializable {
      * The number of columns on the board. (Should be odd so we can start in
      * the center).
      */
-    public static final int COL_COUNT = 25;
+    public static final int iCOL_COUNT = 25;
 
     /**
      * The number of rows on the board. (Should be odd so we can start in
      * the center).
      */
-    public static final int ROW_COUNT = 25;
+    public static final int iROW_COUNT = 25;
 
     /**
      * The size of each tile in pixels.
      */
-    public static final int TILE_SIZE = 20;
+    public static final int iTILE_SIZE = 20;
 
     /**
      * The number of extra pixels that the glow of a tile takes up.
@@ -45,17 +45,17 @@ public class BoardPanel extends JPanel implements Serializable {
     /**
      * The number of pixels to offset the eyes from the sides.
      */
-    private static final int EYE_LARGE_INSET = TILE_SIZE / 3;
+    private static final int iEYE_LARGE_INSET = iTILE_SIZE / 3;
 
     /**
      * The number of pixels to offset the eyes from the front.
      */
-    private static final int EYE_SMALL_INSET = TILE_SIZE / 6;
+    private static final int iEYE_SMALL_INSET = iTILE_SIZE / 6;
 
     /**
      * The length of the eyes from the base (small inset).
      */
-    private static final int EYE_LENGTH = TILE_SIZE / 5;
+    private static final int iEYE_LENGTH = iTILE_SIZE / 5;
 
     /**
      * The font to draw the text with.
@@ -109,7 +109,7 @@ public class BoardPanel extends JPanel implements Serializable {
     /**
      * The SnakeGame instance.
      */
-    private SnakeGame game;
+    private SnakeGame snkGame;
 
     /**
      * The array of tiles that make up this board.
@@ -182,11 +182,11 @@ public class BoardPanel extends JPanel implements Serializable {
 
     /**
      * Creates a new BoardPanel instance.
-     * @param game The SnakeGame instance.
+     * @param snkGame The SnakeGame instance.
      */
-    public BoardPanel(SnakeGame game) {
-        this.game = game;
-        this.tiles = new TileType[ROW_COUNT * COL_COUNT];
+    public BoardPanel(SnakeGame snkGame) {
+        this.snkGame = snkGame;
+        this.tiles = new TileType[iROW_COUNT * iCOL_COUNT];
         this.fAlphaAmount = 0.4f;
         this.cFruitColor = getRandomColor();
         this.fAlphaFactor = 0.06f;
@@ -194,7 +194,7 @@ public class BoardPanel extends JPanel implements Serializable {
         this.iImageChoice = 1;
         this.iBackgroundDisplacement = -2.0f;
         this.iDisplacementFactor = -0.3f;
-        setPreferredSize(new Dimension(COL_COUNT * TILE_SIZE, ROW_COUNT * TILE_SIZE));
+        setPreferredSize(new Dimension(iCOL_COUNT * iTILE_SIZE, iROW_COUNT * iTILE_SIZE));
         setBackground(Color.DARK_GRAY.darker().darker());
     }
 
@@ -223,7 +223,7 @@ public class BoardPanel extends JPanel implements Serializable {
      * @param type The type to set the tile to.
      */
     public void setTile(int x, int y, TileType type, int iValue) {
-        tiles[y * ROW_COUNT + x] = type;
+        tiles[y * iROW_COUNT + x] = type;
         if (type != null){
             type.setValue(iValue);
         }
@@ -252,7 +252,7 @@ public class BoardPanel extends JPanel implements Serializable {
      * @return
      */
     public TileType getTile(int x, int y) {
-        return tiles[y * ROW_COUNT + x];
+        return tiles[y * iROW_COUNT + x];
     }
 
     @Override
@@ -268,7 +268,7 @@ public class BoardPanel extends JPanel implements Serializable {
     /*
      * Show a message on the screen based on the current game state.
      */
-        if(game.isGameOver() || game.isNewGame() || game.isPaused()) {
+        if(snkGame.isGameOver() || snkGame.isNewGame() || snkGame.isPaused()) {
             g.setColor(Color.WHITE);
 
             /*
@@ -283,13 +283,13 @@ public class BoardPanel extends JPanel implements Serializable {
              */
             String largeMessage = "";
             String smallMessage = "";
-            if(game.isNewGame()) {
+            if(snkGame.isNewGame()) {
                 largeMessage = "Snake Game!";
                 smallMessage = "Press Enter to Start";
-            } else if(game.isGameOver()) {
+            } else if(snkGame.isGameOver()) {
                 largeMessage = "Game Over!";
                 smallMessage = "Press Enter to Restart";
-            } else if(game.isPaused()) {
+            } else if(snkGame.isPaused()) {
                 largeMessage = "Paused";
                 smallMessage = "Press P to Resume";
             }
@@ -320,12 +320,12 @@ public class BoardPanel extends JPanel implements Serializable {
      * Loop through each tile on the board and draw it if it
      * is not null.
      */
-        for(int x = 0; x < COL_COUNT; x++) {
-            for(int y = 0; y < ROW_COUNT; y++) {
+        for(int x = 0; x < iCOL_COUNT; x++) {
+            for(int y = 0; y < iROW_COUNT; y++) {
                 TileType type = getTile(x, y);
                 if(type != null) {
                     // Draw tile and glow
-                    drawTile(x * TILE_SIZE, y * TILE_SIZE, type, g, fAlphaAmount);
+                    drawTile(x * iTILE_SIZE, y * iTILE_SIZE, type, g, fAlphaAmount);
                 }
             }
         }
@@ -341,10 +341,10 @@ public class BoardPanel extends JPanel implements Serializable {
      */
         g.setColor(Color.DARK_GRAY);
         g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-        for(int x = 0; x < COL_COUNT; x++) {
-            for(int y = 0; y < ROW_COUNT; y++) {
-                g.drawLine(x * TILE_SIZE, 0, x * TILE_SIZE, getHeight());
-                g.drawLine(0, y * TILE_SIZE, getWidth(), y * TILE_SIZE);
+        for(int x = 0; x < iCOL_COUNT; x++) {
+            for(int y = 0; y < iROW_COUNT; y++) {
+                g.drawLine(x * iTILE_SIZE, 0, x * iTILE_SIZE, getHeight());
+                g.drawLine(0, y * iTILE_SIZE, getWidth(), y * iTILE_SIZE);
             }
         }
     }
@@ -400,7 +400,7 @@ public class BoardPanel extends JPanel implements Serializable {
              */
             case Fruit:
                 g2d.setColor(Color.MAGENTA.brighter());
-                g2d.fillOval(iX + 2, iY + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+                g2d.fillOval(iX + 2, iY + 2, iTILE_SIZE - 4, iTILE_SIZE - 4);
 
                 /*
                  * Create a radial gradient with the light and dark colors to give the
@@ -423,8 +423,8 @@ public class BoardPanel extends JPanel implements Serializable {
                 g2d.setPaint(paint);
                 g2d.fillOval(iX + 1,
                              iY + 1,
-                             TILE_SIZE - 2,
-                             TILE_SIZE - 2);
+                             iTILE_SIZE - 2,
+                             iTILE_SIZE - 2);
                 g2d.setComposite(cCurrentComposite);
                 break;
 
@@ -444,8 +444,8 @@ public class BoardPanel extends JPanel implements Serializable {
                                    getExpansion(iEnlarge / 2),
                            iY + 2 + rRandom.nextInt(2) * iNegativizer -
                                    getExpansion(iEnlarge / 2),
-                           TILE_SIZE - 4 + getExpansion(iEnlarge),
-                           TILE_SIZE - 4 + getExpansion(iEnlarge));
+                           iTILE_SIZE - 4 + getExpansion(iEnlarge),
+                           iTILE_SIZE - 4 + getExpansion(iEnlarge));
                 break;
 
             /*
@@ -454,7 +454,7 @@ public class BoardPanel extends JPanel implements Serializable {
              */
             case SnakeBody:
                 g.setColor(getRandomColor().brighter().brighter());
-                g.fillRect(iX, iY, TILE_SIZE, TILE_SIZE);
+                g.fillRect(iX, iY, iTILE_SIZE, iTILE_SIZE);
                 break;
 
             /*
@@ -464,7 +464,7 @@ public class BoardPanel extends JPanel implements Serializable {
             case SnakeHead:
                 //Fill the tile in with green.
                 g.setColor(getRandomColor().brighter().brighter());
-                g.fillRect(iX, iY, TILE_SIZE, TILE_SIZE);
+                g.fillRect(iX, iY, iTILE_SIZE, iTILE_SIZE);
 
                 //Set the color to black so that we can start drawing the eyes.
                 g.setColor(Color.BLACK);
@@ -482,46 +482,46 @@ public class BoardPanel extends JPanel implements Serializable {
                  * Drawing the eyes is fairly simple, but is a bit difficult to
                  * explain. The basic process is this:
                  *
-                 * First, we add (or subtract) EYE_SMALL_INSET to or from the
+                 * First, we add (or subtract) iEYE_SMALL_INSET to or from the
                  * side of the tile representing the direction we're facing. This
                  * will be constant for both eyes, and is represented by the
                  * variable 'baseX' or 'baseY' (depending on orientation).
                  *
-                 * Next, we add (or subtract) EYE_LARGE_INSET to and from the two
+                 * Next, we add (or subtract) iEYE_LARGE_INSET to and from the two
                  * neighboring directions (Example; East and West if we're facing
                  * north).
                  *
-                 * Finally, we draw a line from the base offset that is EYE_LENGTH
+                 * Finally, we draw a line from the base offset that is iEYE_LENGTH
                  * pixels in length at whatever the offset is from the neighboring
                  * directions.
                  *
                  */
-                switch(game.getDirection()) {
+                switch(snkGame.getDirection()) {
                     case North: {
-                        int baseY = iY + EYE_SMALL_INSET;
-                        g.drawLine(iX + EYE_LARGE_INSET, baseY, iX + EYE_LARGE_INSET, baseY + EYE_LENGTH);
-                        g.drawLine(iX + TILE_SIZE - EYE_LARGE_INSET, baseY, iX + TILE_SIZE - EYE_LARGE_INSET, baseY + EYE_LENGTH);
+                        int baseY = iY + iEYE_SMALL_INSET;
+                        g.drawLine(iX + iEYE_LARGE_INSET, baseY, iX + iEYE_LARGE_INSET, baseY + iEYE_LENGTH);
+                        g.drawLine(iX + iTILE_SIZE - iEYE_LARGE_INSET, baseY, iX + iTILE_SIZE - iEYE_LARGE_INSET, baseY + iEYE_LENGTH);
                         break;
                     }
 
                     case South: {
-                        int baseY = iY + TILE_SIZE - EYE_SMALL_INSET;
-                        g.drawLine(iX + EYE_LARGE_INSET, baseY, iX + EYE_LARGE_INSET, baseY - EYE_LENGTH);
-                        g.drawLine(iX + TILE_SIZE - EYE_LARGE_INSET, baseY, iX + TILE_SIZE - EYE_LARGE_INSET, baseY - EYE_LENGTH);
+                        int baseY = iY + iTILE_SIZE - iEYE_SMALL_INSET;
+                        g.drawLine(iX + iEYE_LARGE_INSET, baseY, iX + iEYE_LARGE_INSET, baseY - iEYE_LENGTH);
+                        g.drawLine(iX + iTILE_SIZE - iEYE_LARGE_INSET, baseY, iX + iTILE_SIZE - iEYE_LARGE_INSET, baseY - iEYE_LENGTH);
                         break;
                     }
 
                     case West: {
-                        int baseX = iX + EYE_SMALL_INSET;
-                        g.drawLine(baseX, iY + EYE_LARGE_INSET, baseX + EYE_LENGTH, iY + EYE_LARGE_INSET);
-                        g.drawLine(baseX, iY + TILE_SIZE - EYE_LARGE_INSET, baseX + EYE_LENGTH, iY + TILE_SIZE - EYE_LARGE_INSET);
+                        int baseX = iX + iEYE_SMALL_INSET;
+                        g.drawLine(baseX, iY + iEYE_LARGE_INSET, baseX + iEYE_LENGTH, iY + iEYE_LARGE_INSET);
+                        g.drawLine(baseX, iY + iTILE_SIZE - iEYE_LARGE_INSET, baseX + iEYE_LENGTH, iY + iTILE_SIZE - iEYE_LARGE_INSET);
                         break;
                     }
 
                     case East: {
-                        int baseX = iX + TILE_SIZE - EYE_SMALL_INSET;
-                        g.drawLine(baseX, iY + EYE_LARGE_INSET, baseX - EYE_LENGTH, iY + EYE_LARGE_INSET);
-                        g.drawLine(baseX, iY + TILE_SIZE - EYE_LARGE_INSET, baseX - EYE_LENGTH, iY + TILE_SIZE - EYE_LARGE_INSET);
+                        int baseX = iX + iTILE_SIZE - iEYE_SMALL_INSET;
+                        g.drawLine(baseX, iY + iEYE_LARGE_INSET, baseX - iEYE_LENGTH, iY + iEYE_LARGE_INSET);
+                        g.drawLine(baseX, iY + iTILE_SIZE - iEYE_LARGE_INSET, baseX - iEYE_LENGTH, iY + iTILE_SIZE - iEYE_LARGE_INSET);
                         break;
                     }
                 }
