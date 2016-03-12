@@ -141,13 +141,13 @@ public class SnakeGame extends JFrame implements Serializable {
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
 
-                /*
-                 * If the game is not paused, and the game is not over...
-                 *
-                 * Ensure that the direction list is not full, and that the most
-                 * recent direction is adjacent to North before adding the
-                 * direction to the list.
-                 */
+                    /*
+                     * If the game is not paused, and the game is not over...
+                     *
+                     * Ensure that the direction list is not full, and that the most
+                     * recent direction is adjacent to North before adding the
+                     * direction to the list.
+                     */
                     case KeyEvent.VK_W:
                     case KeyEvent.VK_UP:
                         if (!isPaused && !isGameOver) {
@@ -160,13 +160,13 @@ public class SnakeGame extends JFrame implements Serializable {
                         }
                         break;
 
-                /*
-                 * If the game is not paused, and the game is not over...
-                 *
-                 * Ensure that the direction list is not full, and that the most
-                 * recent direction is adjacent to South before adding the
-                 * direction to the list.
-                 */
+                    /*
+                     * If the game is not paused, and the game is not over...
+                     *
+                     * Ensure that the direction list is not full, and that the most
+                     * recent direction is adjacent to South before adding the
+                     * direction to the list.
+                     */
                     case KeyEvent.VK_S:
                     case KeyEvent.VK_DOWN:
                         if (!isPaused && !isGameOver) {
@@ -179,13 +179,13 @@ public class SnakeGame extends JFrame implements Serializable {
                         }
                         break;
 
-                /*
-                 * If the game is not paused, and the game is not over...
-                 *
-                 * Ensure that the direction list is not full, and that the most
-                 * recent direction is adjacent to West before adding the
-                 * direction to the list.
-                 */
+                    /*
+                     * If the game is not paused, and the game is not over...
+                     *
+                     * Ensure that the direction list is not full, and that the most
+                     * recent direction is adjacent to West before adding the
+                     * direction to the list.
+                     */
                     case KeyEvent.VK_A:
                     case KeyEvent.VK_LEFT:
                         if (!isPaused && !isGameOver) {
@@ -198,13 +198,13 @@ public class SnakeGame extends JFrame implements Serializable {
                         }
                         break;
 
-                /*
-                 * If the game is not paused, and the game is not over...
-                 *
-                 * Ensure that the direction list is not full, and that the most
-                 * recent direction is adjacent to East before adding the
-                 * direction to the list.
-                 */
+                    /*
+                     * If the game is not paused, and the game is not over...
+                     *
+                     * Ensure that the direction list is not full, and that the most
+                     * recent direction is adjacent to East before adding the
+                     * direction to the list.
+                     */
                     case KeyEvent.VK_D:
                     case KeyEvent.VK_RIGHT:
                         if (!isPaused && !isGameOver) {
@@ -217,10 +217,10 @@ public class SnakeGame extends JFrame implements Serializable {
                         }
                         break;
 
-                /*
-                 * If the game is not over, toggle the paused flag and update
-                 * the logicTimer's pause flag accordingly.
-                 */
+                    /*
+                     * If the game is not over, toggle the paused flag and update
+                     * the logicTimer's pause flag accordingly.
+                     */
                     case KeyEvent.VK_P:
                         if (!isGameOver) {
                             isPaused = !isPaused;
@@ -228,9 +228,9 @@ public class SnakeGame extends JFrame implements Serializable {
                         }
                         break;
 
-                /*
-                 * Reset the game if one is not currently in progress.
-                 */
+                    /*
+                     * Reset the game if one is not currently in progress.
+                     */
                     case KeyEvent.VK_ENTER:
                         if (isNewGame || isGameOver) {
                             resetGame();
@@ -240,6 +240,7 @@ public class SnakeGame extends JFrame implements Serializable {
                         saveGame(SnakeGame.this);
                         break;
                     case KeyEvent.VK_C:
+                        resetGame();
                         loadGame(SnakeGame.this);
                         logicTimer.reset();
                         break;
