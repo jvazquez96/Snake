@@ -1,18 +1,16 @@
 package snake;
 
 
-import java.awt.BorderLayout;
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Random;
-import java.io.Serializable;
 
-import javax.swing.JFrame;
-
-import static  snake.StateHandler.saveGame;
 import static snake.StateHandler.loadGame;
+import static snake.StateHandler.saveGame;
 /**
  * The {@code SnakeGame} class is responsible for handling much of the game's logic.
  * @author Brendan Jones
@@ -78,6 +76,11 @@ public class SnakeGame extends JFrame implements Serializable{
 	 * Whether or not the game is paused.
 	 */
 	private boolean isPaused;
+
+	/**
+	 * The shaker helper object for the frame
+	 */
+	private ShakeFrame shaShaker;
 	
 	/**
 	 * The list that contains the points for the snake.
@@ -123,7 +126,7 @@ public class SnakeGame extends JFrame implements Serializable{
 		 */
 		this.board = new BoardPanel(this);
 		this.side = new SidePanel(this);
-		
+		this.shaShaker = new ShakeFrame(this);
 		add(board, BorderLayout.CENTER);
 		add(side, BorderLayout.EAST);
 		
@@ -334,16 +337,18 @@ public class SnakeGame extends JFrame implements Serializable{
 		 */
 		if(collision == TileType.Fruit) {
 			fruitsEaten++;
-                        score += nextFruitScore * collision.getValue();
-                        System.out.println(collision.getValue());
-                        //score += collision.getValue();
-                        iFactor = collision.getValue();
+			score += nextFruitScore * collision.getValue();
+			System.out.println(collision.getValue());
+			//score += collision.getValue();
+			iFactor = collision.getValue();
 			spawnFruit();
-		} else if(collision == TileType.SnakeBody || collision == TileType.BadFruit) {
-                        //System.out.println("Enters");
+		}
+		else if(collision == TileType.SnakeBody || collision == TileType.BadFruit) {
+			shaShaker.startShaking();
 			isGameOver = true;
 			logicTimer.setPaused(true);
-		} else if(nextFruitScore > 10) {
+		}
+		else if(nextFruitScore > 10) {
 			nextFruitScore--;
 		}
                 

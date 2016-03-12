@@ -1,10 +1,9 @@
 package snake;
 
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.*;
 import java.util.LinkedList;
-import java.io.Serializable;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -25,7 +24,7 @@ public class StateHandler {
         try {
             /*
 			 * Save a serialized version of the individual member variables
-			 * in the received Tetris instance
+			 * in the received Snake instance
 			 */
             ObjectOutputStream objOut = new ObjectOutputStream(
                     new FileOutputStream("saveGame.bin"));
@@ -39,7 +38,7 @@ public class StateHandler {
     public static void loadGame(SnakeGame snakeGame) {
         /*
 	     * Load a serialized version of a previous game state from
-	     * a binary file, and set each member variable in the received Tetris
+	     * a binary file, and set each member variable in the received Snake
 	     * instance
 		 */
         try {
