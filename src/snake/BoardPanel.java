@@ -3,8 +3,8 @@ package snake;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.MultipleGradientPaint.CycleMethod;
 import java.awt.geom.Point2D;
-import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -13,7 +13,7 @@ import java.util.Random;
  * @author Brendan Jones
  *
  */
-public class BoardPanel extends JPanel implements Serializable {
+public class BoardPanel extends JPanel {
 
     /**
      * Serial Version UID.
@@ -61,6 +61,7 @@ public class BoardPanel extends JPanel implements Serializable {
      * The font to draw the text with.
      */
     private static final Font FONT = new Font("Tahoma", Font.BOLD, 26);
+    public static final float ALPHA_THRESHOLD = 0.80f;
 
     /**
      * The current amount of alpha a tile is being drawn with in order to
@@ -117,7 +118,7 @@ public class BoardPanel extends JPanel implements Serializable {
     private TileType[] tiles;
 
     public void setTiles(TileType[] tilMat){
-        this.tiles = tilMat;
+        tiles = tilMat;
     }
 
     public TileType[] getT(){
@@ -129,7 +130,7 @@ public class BoardPanel extends JPanel implements Serializable {
      * @return The alpha amount
      */
     public float getAlphaAmount() {
-        return this.fAlphaAmount;
+        return fAlphaAmount;
     }
 
     /**
@@ -137,14 +138,14 @@ public class BoardPanel extends JPanel implements Serializable {
      * @return The alpha factor
      */
     public float getAlphaFactor() {
-        return this.fAlphaFactor;
+        return fAlphaFactor;
     }
 
     public float getGradientModifier() {
         return iGradientModifier;
     }
 
-    public void setGradientModifier(float iGradientModifier) {
+    public void setGradientModifier(final float iGradientModifier) {
         this.iGradientModifier = iGradientModifier;
     }
 
@@ -152,7 +153,7 @@ public class BoardPanel extends JPanel implements Serializable {
         return imgBackground;
     }
 
-    public void setImgBackground(Image imgBackground) {
+    public void setImgBackground(final Image imgBackground) {
         this.imgBackground = imgBackground;
     }
 
@@ -186,14 +187,14 @@ public class BoardPanel extends JPanel implements Serializable {
      */
     public BoardPanel(SnakeGame game) {
         this.game = game;
-        this.tiles = new TileType[ROW_COUNT * COL_COUNT];
-        this.fAlphaAmount = 0.4f;
-        this.cFruitColor = getRandomColor();
-        this.fAlphaFactor = 0.06f;
-        this.iGradientModifier = 0;
-        this.iImageChoice = 1;
-        this.iBackgroundDisplacement = -2.0f;
-        this.iDisplacementFactor = -0.3f;
+        tiles = new TileType[ROW_COUNT * COL_COUNT];
+        fAlphaAmount = 0.4f;
+        cFruitColor = getRandomColor();
+        fAlphaFactor = 0.06f;
+        iGradientModifier = 0;
+        iImageChoice = 1;
+        iBackgroundDisplacement = -2.0f;
+        iDisplacementFactor = -0.3f;
         setPreferredSize(new Dimension(COL_COUNT * TILE_SIZE, ROW_COUNT * TILE_SIZE));
         setBackground(Color.DARK_GRAY.darker().darker());
     }
@@ -264,7 +265,7 @@ public class BoardPanel extends JPanel implements Serializable {
         drawMessage(g);
     }
 
-    private void drawMessage(Graphics g) {
+    private void drawMessage(final Graphics g) {
     /*
      * Show a message on the screen based on the current game state.
      */
@@ -274,8 +275,8 @@ public class BoardPanel extends JPanel implements Serializable {
             /*
              * Get the center coordinates of the board.
              */
-            int centerX = getWidth() / 2;
-            int centerY = getHeight() / 2;
+            final int centerX = getWidth() / 2;
+            final int centerY = getHeight() / 2;
 
             /*
              * Allocate the messages for and set their values based on the game
@@ -300,18 +301,24 @@ public class BoardPanel extends JPanel implements Serializable {
             g.setFont(FONT);
             g.setColor(Color.LIGHT_GRAY);
             g.drawString(largeMessage,
-                         centerX - g.getFontMetrics().stringWidth(largeMessage) / 2,
-                         centerY - 50 + 1);
+                         centerX - (g.getFontMetrics()
+                                     .stringWidth(largeMessage) / 2),
+                         (centerY - 50) + 1);
             g.drawString(smallMessage,
-                         centerX - g.getFontMetrics().stringWidth(smallMessage) / 2,
+                         centerX - (g.getFontMetrics()
+                                     .stringWidth(smallMessage) / 2),
                          centerY + 50 + 1);
 
             /*
              * Set the message font and draw the messages in the center of the board.
              */
             g.setColor(Color.WHITE);
-            g.drawString(largeMessage, centerX - g.getFontMetrics().stringWidth(largeMessage) / 2, centerY - 50);
-            g.drawString(smallMessage, centerX - g.getFontMetrics().stringWidth(smallMessage) / 2, centerY + 50);
+            g.drawString(largeMessage,
+                         centerX - (g.getFontMetrics()
+                                     .stringWidth(largeMessage) / 2), centerY - 50);
+            g.drawString(smallMessage,
+                         centerX - (g.getFontMetrics()
+                                     .stringWidth(smallMessage) / 2), centerY + 50);
         }
     }
 
@@ -355,7 +362,7 @@ public class BoardPanel extends JPanel implements Serializable {
      * When the alpha has reached the maximum value, start decreasing
      * it and viceversa.
      */
-        if(fAlphaAmount >= 0.80f){
+        if(fAlphaAmount >= ALPHA_THRESHOLD){
             fAlphaAmount = 0.75f;
             fAlphaFactor *= -1;
             cFruitColor = getRandomColor();
@@ -378,7 +385,7 @@ public class BoardPanel extends JPanel implements Serializable {
      * @param g The graphics object to draw to.
      */
     private void drawTile(int iX, int iY, TileType type, Graphics g,
-                          float fAlphaValue) {
+                          final float fAlphaValue) {
         /*
          * Create a new Graphics2D instance to allow alpha to be drawn into
          * the object. Then save the current composite to restore normal
@@ -418,7 +425,7 @@ public class BoardPanel extends JPanel implements Serializable {
                                                 radius,
                                                 dist,
                                                 colors,
-                                                MultipleGradientPaint.CycleMethod.REFLECT);
+                                                CycleMethod.REFLECT);
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, fAlphaValue));
                 g2d.setPaint(paint);
                 g2d.fillOval(iX + 1,
@@ -504,12 +511,12 @@ public class BoardPanel extends JPanel implements Serializable {
                         break;
                     }
 
-                    case South: {
+                    case South:
                         int baseY = iY + TILE_SIZE - EYE_SMALL_INSET;
                         g.drawLine(iX + EYE_LARGE_INSET, baseY, iX + EYE_LARGE_INSET, baseY - EYE_LENGTH);
+
                         g.drawLine(iX + TILE_SIZE - EYE_LARGE_INSET, baseY, iX + TILE_SIZE - EYE_LARGE_INSET, baseY - EYE_LENGTH);
                         break;
-                    }
 
                     case West: {
                         int baseX = iX + EYE_SMALL_INSET;
@@ -518,12 +525,12 @@ public class BoardPanel extends JPanel implements Serializable {
                         break;
                     }
 
-                    case East: {
+                    case East:
                         int baseX = iX + TILE_SIZE - EYE_SMALL_INSET;
                         g.drawLine(baseX, iY + EYE_LARGE_INSET, baseX - EYE_LENGTH, iY + EYE_LARGE_INSET);
+
                         g.drawLine(baseX, iY + TILE_SIZE - EYE_LARGE_INSET, baseX - EYE_LENGTH, iY + TILE_SIZE - EYE_LARGE_INSET);
                         break;
-                    }
                 }
                 break;
         }
@@ -541,7 +548,7 @@ public class BoardPanel extends JPanel implements Serializable {
 
     // Creates an expansion value based on the current alpha value
     int getExpansion(int iAmplifier){
-        return ((int)(fAlphaAmount * iAmplifier * fAlphaFactor));
+        return (int) (fAlphaAmount * iAmplifier * fAlphaFactor);
     }
 
 }

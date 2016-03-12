@@ -55,7 +55,7 @@ public class ShakeFrame {
      * Creates an instance of ActionTime that tracks the time that has passed
      * since the call to startShaking.
      */
-    private ActionTime timeListener;
+    private ShakeFrame.ActionTime timeListener;
 
 
     /**
@@ -64,8 +64,8 @@ public class ShakeFrame {
      * @param tetInstance The SnakeGame instance to shake.
      */
     public ShakeFrame(SnakeGame tetInstance) {
-        this.sSnake = tetInstance;
-        timeListener = new ActionTime();
+        sSnake = tetInstance;
+        timeListener = new ShakeFrame.ActionTime();
     }
 
     /**
@@ -135,9 +135,9 @@ public class ShakeFrame {
              * factor as an upper limit
              */
             iXOffset = poiInitPos.x +
-                    iDirection * (ranNumGenerator.nextInt(iSHAKE_FACTOR));
+                    iDirection * ranNumGenerator.nextInt(iSHAKE_FACTOR);
             iYOffset = poiInitPos.y +
-                    iDirection * (ranNumGenerator.nextInt(iSHAKE_FACTOR));
+                    iDirection * ranNumGenerator.nextInt(iSHAKE_FACTOR);
 
             /*
              * Move and repaint the frame

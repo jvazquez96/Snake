@@ -24,7 +24,7 @@ public class StateHandler {
             String sName = JOptionPane.showInputDialog("Please input your " +
                                                                "username");
             sName = sName.trim().toLowerCase() ;
-            ObjectOutputStream objOut = new ObjectOutputStream(
+            final ObjectOutputStream objOut = new ObjectOutputStream(
                     new FileOutputStream(sName + "_saveGame.bin"));
             writeVariables(snakeGame, objOut);
             objOut.close();
@@ -34,7 +34,7 @@ public class StateHandler {
         }
     }
 
-    public static void loadGame(SnakeGame snakeGame) {
+    public static void loadGame(final SnakeGame snakeGame) {
         /*
          * Load a serialized version of a previous game state from
          * a binary file, and set each member variable in the received Snake
@@ -46,7 +46,7 @@ public class StateHandler {
                                                            " a previous game");
         sName = sName.trim().toLowerCase();
         try {
-            ObjectInputStream objIn = new ObjectInputStream(
+            final ObjectInputStream objIn = new ObjectInputStream(
                     new FileInputStream(sName + "_saveGame.bin"));
             readVariables(snakeGame, objIn);
             objIn.close();
@@ -62,7 +62,7 @@ public class StateHandler {
         }
     }
 
-    private static void writeVariables(SnakeGame snakeGame, ObjectOutputStream objOut) throws
+    private static void writeVariables(final SnakeGame snakeGame, final ObjectOutputStream objOut) throws
                                                                                        IOException {
         objOut.writeObject(snakeGame.isNewGame());
         objOut.writeObject(snakeGame.isGameOver());
@@ -77,7 +77,7 @@ public class StateHandler {
         objOut.writeObject(snakeGame.getBoard().getT());
     }
 
-    private static void readVariables(SnakeGame snakeGame, ObjectInputStream objIn) throws
+    private static void readVariables(final SnakeGame snakeGame, final ObjectInputStream objIn) throws
                                                                                     IOException,
                                                                                     ClassNotFoundException {
         snakeGame.setNewGame((boolean) objIn.readObject());

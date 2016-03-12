@@ -52,7 +52,7 @@ public class Clock implements Serializable {
      * @param cyclesPerSecond The number of cycles per second.
      */
     public void setCyclesPerSecond(float cyclesPerSecond) {
-        this.millisPerCycle = (1.0f / cyclesPerSecond) * 1000;
+        millisPerCycle = (1.0f / cyclesPerSecond) * 1000;
     }
 
     /**
@@ -61,10 +61,10 @@ public class Clock implements Serializable {
      * paused flag will be set to false.
      */
     public void reset() {
-        this.elapsedCycles = 0;
-        this.excessCycles = 0.0f;
-        this.lastUpdate = getCurrentTime();
-        this.isPaused = false;
+        elapsedCycles = 0;
+        excessCycles = 0.0f;
+        lastUpdate = getCurrentTime();
+        isPaused = false;
     }
 
     /**
@@ -80,12 +80,12 @@ public class Clock implements Serializable {
 
         //Update the number of elapsed and excess ticks if we're not paused.
         if (!isPaused) {
-            this.elapsedCycles += (int) Math.floor(delta / millisPerCycle);
-            this.excessCycles = delta % millisPerCycle;
+            elapsedCycles += (int) Math.floor(delta / millisPerCycle);
+            excessCycles = delta % millisPerCycle;
         }
 
         //Set the last update time for the next update cycle.
-        this.lastUpdate = currUpdate;
+        lastUpdate = currUpdate;
     }
 
     /**
@@ -96,7 +96,7 @@ public class Clock implements Serializable {
      * @param paused Whether or not to pause this clock.
      */
     public void setPaused(boolean paused) {
-        this.isPaused = paused;
+        isPaused = paused;
     }
 
     /**
@@ -117,7 +117,7 @@ public class Clock implements Serializable {
      */
     public boolean hasElapsedCycle() {
         if (elapsedCycles > 0) {
-            this.elapsedCycles--;
+            elapsedCycles--;
             return true;
         }
         return false;
@@ -132,7 +132,7 @@ public class Clock implements Serializable {
      * @see hasElapsedCycle
      */
     public boolean peekElapsedCycle() {
-        return (elapsedCycles > 0);
+        return elapsedCycles > 0;
     }
 
     /**
@@ -144,7 +144,7 @@ public class Clock implements Serializable {
      * @return The current time in milliseconds.
      */
     private static final long getCurrentTime() {
-        return (System.nanoTime() / 1000000L);
+        return System.nanoTime() / 1000000L;
     }
 
 }
