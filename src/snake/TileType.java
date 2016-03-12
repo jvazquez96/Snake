@@ -26,7 +26,7 @@ public enum TileType {
         this.iValue = iValue;
     }
 
-    private TileType(int iValue) {
+    TileType(int iValue) {
         this.iValue = iValue;
     }
 

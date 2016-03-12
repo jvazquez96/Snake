@@ -61,7 +61,7 @@ public class SidePanel extends JPanel {
     private static final int LARGE_OFFSET = 50;
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(final Graphics g) {
         super.paintComponent(g);
 
         /*
@@ -75,8 +75,8 @@ public class SidePanel extends JPanel {
         g.setFont(fLARGE_FONT);
 
         drawWithShadow(g,
-                       getWidth() / 2 - g.getFontMetrics()
-                                         .stringWidth("Snake Game") / 2,
+                       (getWidth() / 2) - (g.getFontMetrics()
+                                            .stringWidth("Snake Game") / 2),
                        50,
                        "Snake Game");
         /*

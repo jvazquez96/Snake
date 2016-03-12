@@ -3,8 +3,8 @@ package snake;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.MultipleGradientPaint.CycleMethod;
 import java.awt.geom.Point2D;
-import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -13,7 +13,7 @@ import java.util.Random;
  * @author Brendan Jones
  *
  */
-public class BoardPanel extends JPanel implements Serializable {
+public class BoardPanel extends JPanel {
 
     /**
      * Serial Version UID.
@@ -61,6 +61,9 @@ public class BoardPanel extends JPanel implements Serializable {
      * The font to draw the text with.
      */
     private static final Font FONT = new Font("Tahoma", Font.BOLD, 26);
+    public static final float ALPHA_THRESHOLD = 0.80f;
+    public static final float BRIGHT_RADIAL = 0.10f;
+    public static final float DARK_RADIAL = .90f;
 
     /**
      * The current amount of alpha a tile is being drawn with in order to
@@ -117,74 +120,18 @@ public class BoardPanel extends JPanel implements Serializable {
     private TileType[] tiles;
 
     public void setTiles(TileType[] tilMat){
-        this.tiles = tilMat;
+        tiles = tilMat;
     }
 
-    public TileType[] getT(){
+    public TileType[] getT() {
         return tiles;
-    }
-
-    /**
-     * Gets the current alpha amount
-     * @return The alpha amount
-     */
-    public float getAlphaAmount() {
-        return this.fAlphaAmount;
-    }
-
-    /**
-     * Gets the current alpha modifying factor
-     * @return The alpha factor
-     */
-    public float getAlphaFactor() {
-        return this.fAlphaFactor;
-    }
-
-    public float getGradientModifier() {
-        return iGradientModifier;
-    }
-
-    public void setGradientModifier(float iGradientModifier) {
-        this.iGradientModifier = iGradientModifier;
-    }
-
-    public Image getImgBackground() {
-        return imgBackground;
-    }
-
-    public void setImgBackground(Image imgBackground) {
-        this.imgBackground = imgBackground;
-    }
-
-    public int getImageChoice() {
-        return iImageChoice;
-    }
-
-    public void setImageChoice(int iImageChoice) {
-        this.iImageChoice = iImageChoice;
-    }
-
-    public float getBackgroundDisplacement() {
-        return iBackgroundDisplacement;
-    }
-
-    public void setBackgroundDisplacement(float iBackgroundDisplacement) {
-        this.iBackgroundDisplacement = iBackgroundDisplacement;
-    }
-
-    public float getDisplacementFactor() {
-        return iDisplacementFactor;
-    }
-
-    public void setDisplacementFactor(float iDisplacementFactor) {
-        this.iDisplacementFactor = iDisplacementFactor;
     }
 
     /**
      * Creates a new BoardPanel instance.
      * @param snkGame The SnakeGame instance.
      */
-    public BoardPanel(SnakeGame snkGame) {
+    public BoardPanel(final SnakeGame snkGame) {
         this.snkGame = snkGame;
         this.tiles = new TileType[iROW_COUNT * iCOL_COUNT];
         this.fAlphaAmount = 0.4f;
@@ -212,7 +159,7 @@ public class BoardPanel extends JPanel implements Serializable {
      * @param point The coordinate of the tile.
      * @param type The type to set the tile to.
      */
-    public void setTile(Point point, TileType type) {
+    public void setTile(final Point point, final TileType type) {
         setTile(point.x, point.y, type,0);
     }
 
@@ -222,8 +169,8 @@ public class BoardPanel extends JPanel implements Serializable {
      * @param y The y coordinate of the tile.
      * @param type The type to set the tile to.
      */
-    public void setTile(int x, int y, TileType type, int iValue) {
-        tiles[y * iROW_COUNT + x] = type;
+    public void setTile(final int x, final int y, final TileType type, final int iValue) {
+        tiles[(y * iROW_COUNT) + x] = type;
         if (type != null){
             type.setValue(iValue);
         }
@@ -233,7 +180,7 @@ public class BoardPanel extends JPanel implements Serializable {
      * Sets the current alpha amount
      * @param fAlphaAmount The alpha amount
      */
-    public void setAlphaAmount(float fAlphaAmount) {
+    public void setAlphaAmount(final float fAlphaAmount) {
         this.fAlphaAmount = fAlphaAmount;
     }
 
@@ -241,9 +188,11 @@ public class BoardPanel extends JPanel implements Serializable {
      * Sets the current alpha factor
      * @param fAlphaFactor The alpha factor
      */
-    public void setAlphaFactor(float fAlphaFactor) {
+    public void setAlphaFactor(final float fAlphaFactor) {
         this.fAlphaFactor = fAlphaFactor;
     }
+
+
 
     /**
      * Gets the tile at the desired coordinate.
@@ -252,7 +201,7 @@ public class BoardPanel extends JPanel implements Serializable {
      * @return
      */
     public TileType getTile(int x, int y) {
-        return tiles[y * iROW_COUNT + x];
+        return tiles[(y * iROW_COUNT) + x];
     }
 
     @Override
@@ -264,7 +213,7 @@ public class BoardPanel extends JPanel implements Serializable {
         drawMessage(g);
     }
 
-    private void drawMessage(Graphics g) {
+    private void drawMessage(final Graphics g) {
     /*
      * Show a message on the screen based on the current game state.
      */
@@ -274,8 +223,8 @@ public class BoardPanel extends JPanel implements Serializable {
             /*
              * Get the center coordinates of the board.
              */
-            int centerX = getWidth() / 2;
-            int centerY = getHeight() / 2;
+            final int centerX = getWidth() / 2;
+            final int centerY = getHeight() / 2;
 
             /*
              * Allocate the messages for and set their values based on the game
@@ -300,18 +249,24 @@ public class BoardPanel extends JPanel implements Serializable {
             g.setFont(FONT);
             g.setColor(Color.LIGHT_GRAY);
             g.drawString(largeMessage,
-                         centerX - g.getFontMetrics().stringWidth(largeMessage) / 2,
-                         centerY - 50 + 1);
+                         centerX - (g.getFontMetrics()
+                                     .stringWidth(largeMessage) / 2),
+                         (centerY - 50) + 1);
             g.drawString(smallMessage,
-                         centerX - g.getFontMetrics().stringWidth(smallMessage) / 2,
+                         centerX - (g.getFontMetrics()
+                                     .stringWidth(smallMessage) / 2),
                          centerY + 50 + 1);
 
             /*
              * Set the message font and draw the messages in the center of the board.
              */
             g.setColor(Color.WHITE);
-            g.drawString(largeMessage, centerX - g.getFontMetrics().stringWidth(largeMessage) / 2, centerY - 50);
-            g.drawString(smallMessage, centerX - g.getFontMetrics().stringWidth(smallMessage) / 2, centerY + 50);
+            g.drawString(largeMessage,
+                         centerX - (g.getFontMetrics()
+                                     .stringWidth(largeMessage) / 2), centerY - 50);
+            g.drawString(smallMessage,
+                         centerX - (g.getFontMetrics()
+                                     .stringWidth(smallMessage) / 2), centerY + 50);
         }
     }
 
@@ -355,7 +310,7 @@ public class BoardPanel extends JPanel implements Serializable {
      * When the alpha has reached the maximum value, start decreasing
      * it and viceversa.
      */
-        if(fAlphaAmount >= 0.80f){
+        if(fAlphaAmount >= ALPHA_THRESHOLD){
             fAlphaAmount = 0.75f;
             fAlphaFactor *= -1;
             cFruitColor = getRandomColor();
@@ -378,7 +333,7 @@ public class BoardPanel extends JPanel implements Serializable {
      * @param g The graphics object to draw to.
      */
     private void drawTile(int iX, int iY, TileType type, Graphics g,
-                          float fAlphaValue) {
+                          final float fAlphaValue) {
         /*
          * Create a new Graphics2D instance to allow alpha to be drawn into
          * the object. Then save the current composite to restore normal
@@ -407,19 +362,22 @@ public class BoardPanel extends JPanel implements Serializable {
                  * tile a more dynamic look. The increasing iGradientModifier gives the
                  * effect of the tile shining
                  */
-                Point2D center = new Point2D.Float(iX/2 + iGradientModifier, iY/2);
+                final Point2D center = new Point2D.Float((iX / 2) + iGradientModifier,
+                                                         iY / 2);
                 iGradientModifier += .1;
-                float radius = 14;
-                float[] dist = {0.10f, .90f};
-                Color[] colors = {cFruitColor.brighter(), cFruitColor.darker
+                final float radius = 14;
+                final float[] dist = {BRIGHT_RADIAL, DARK_RADIAL};
+                final Color[] colors = {cFruitColor.brighter(), cFruitColor.darker
                         ()};
                 RadialGradientPaint paint =
                         new RadialGradientPaint(center,
                                                 radius,
                                                 dist,
                                                 colors,
-                                                MultipleGradientPaint.CycleMethod.REFLECT);
-                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, fAlphaValue));
+                                                CycleMethod.REFLECT);
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+
+                                                            fAlphaValue));
                 g2d.setPaint(paint);
                 g2d.fillOval(iX + 1,
                              iY + 1,
@@ -433,19 +391,19 @@ public class BoardPanel extends JPanel implements Serializable {
             * on each side
             */
             case BadFruit:
-                int iEnlarge = 40;
-                Random rRandom = new Random();
+                final Random rRandom = new Random();
                 int iNegativizer = rRandom.nextInt(2);
-                if(iNegativizer != 1){
+                if (iNegativizer != 1) {
                     iNegativizer = -1;
                 }
                 g.setColor(Color.CYAN.darker().darker());
-                g.fillRect(iX + 2 + rRandom.nextInt(2) * iNegativizer -
+                final int iEnlarge = 40;
+                g.fillRect((iX + 2 + (rRandom.nextInt(2) * iNegativizer)) -
                                    getExpansion(iEnlarge / 2),
-                           iY + 2 + rRandom.nextInt(2) * iNegativizer -
+                           (iY + 2 + (rRandom.nextInt(2) * iNegativizer)) -
                                    getExpansion(iEnlarge / 2),
-                           iTILE_SIZE - 4 + getExpansion(iEnlarge),
-                           iTILE_SIZE - 4 + getExpansion(iEnlarge));
+                           (iTILE_SIZE - 4) + getExpansion(iEnlarge),
+                           (iTILE_SIZE - 4) + getExpansion(iEnlarge));
                 break;
 
             /*
@@ -496,32 +454,55 @@ public class BoardPanel extends JPanel implements Serializable {
                  * directions.
                  *
                  */
-                switch(snkGame.getDirection()) {
+                switch (snkGame.getDirection()) {
                     case North: {
-                        int baseY = iY + iEYE_SMALL_INSET;
-                        g.drawLine(iX + iEYE_LARGE_INSET, baseY, iX + iEYE_LARGE_INSET, baseY + iEYE_LENGTH);
-                        g.drawLine(iX + iTILE_SIZE - iEYE_LARGE_INSET, baseY, iX + iTILE_SIZE - iEYE_LARGE_INSET, baseY + iEYE_LENGTH);
+                        final int baseY = iY + iEYE_SMALL_INSET;
+                        g.drawLine(iX + iEYE_LARGE_INSET,
+                                   baseY,
+                                   iX + iEYE_LARGE_INSET,
+                                   baseY + iEYE_LENGTH);
+                        g.drawLine((iX + iTILE_SIZE) - iEYE_LARGE_INSET,
+                                   baseY,
+                                   (iX + iTILE_SIZE) - iEYE_LARGE_INSET,
+                                   baseY + iEYE_LENGTH);
                         break;
                     }
 
                     case South: {
-                        int baseY = iY + iTILE_SIZE - iEYE_SMALL_INSET;
-                        g.drawLine(iX + iEYE_LARGE_INSET, baseY, iX + iEYE_LARGE_INSET, baseY - iEYE_LENGTH);
-                        g.drawLine(iX + iTILE_SIZE - iEYE_LARGE_INSET, baseY, iX + iTILE_SIZE - iEYE_LARGE_INSET, baseY - iEYE_LENGTH);
+                        final int baseY = (iY + iTILE_SIZE) - iEYE_SMALL_INSET;
+                        g.drawLine(iX + iEYE_LARGE_INSET,
+                                   baseY,
+                                   iX + iEYE_LARGE_INSET,
+                                   baseY - iEYE_LENGTH);
+                        g.drawLine((iX + iTILE_SIZE) - iEYE_LARGE_INSET,
+                                   baseY,
+                                   (iX + iTILE_SIZE) - iEYE_LARGE_INSET,
+                                   baseY - iEYE_LENGTH);
                         break;
                     }
-
                     case West: {
-                        int baseX = iX + iEYE_SMALL_INSET;
-                        g.drawLine(baseX, iY + iEYE_LARGE_INSET, baseX + iEYE_LENGTH, iY + iEYE_LARGE_INSET);
-                        g.drawLine(baseX, iY + iTILE_SIZE - iEYE_LARGE_INSET, baseX + iEYE_LENGTH, iY + iTILE_SIZE - iEYE_LARGE_INSET);
+                        final int baseX = iX + iEYE_SMALL_INSET;
+                        g.drawLine(baseX,
+                                   iY + iEYE_LARGE_INSET,
+                                   baseX + iEYE_LENGTH,
+                                   iY + iEYE_LARGE_INSET);
+                        g.drawLine(baseX,
+                                   (iY + iTILE_SIZE) - iEYE_LARGE_INSET,
+                                   baseX + iEYE_LENGTH,
+                                   (iY + iTILE_SIZE) - iEYE_LARGE_INSET);
                         break;
                     }
 
                     case East: {
-                        int baseX = iX + iTILE_SIZE - iEYE_SMALL_INSET;
-                        g.drawLine(baseX, iY + iEYE_LARGE_INSET, baseX - iEYE_LENGTH, iY + iEYE_LARGE_INSET);
-                        g.drawLine(baseX, iY + iTILE_SIZE - iEYE_LARGE_INSET, baseX - iEYE_LENGTH, iY + iTILE_SIZE - iEYE_LARGE_INSET);
+                        final int baseX = (iX + iTILE_SIZE) - iEYE_SMALL_INSET;
+                        g.drawLine(baseX,
+                                   iY + iEYE_LARGE_INSET,
+                                   baseX - iEYE_LENGTH,
+                                   iY + iEYE_LARGE_INSET);
+                        g.drawLine(baseX,
+                                   (iY + iTILE_SIZE) - iEYE_LARGE_INSET,
+                                   baseX - iEYE_LENGTH,
+                                   (iY + iTILE_SIZE) - iEYE_LARGE_INSET);
                         break;
                     }
                 }
@@ -529,19 +510,17 @@ public class BoardPanel extends JPanel implements Serializable {
         }
     }
 
-    Color getRandomColor(){
-        Random rRandom = new Random();
-        float fRed = rRandom.nextFloat();
-        // We don't want it to be very red
-        fRed = fRed * 0.8f;
-        float fBlue = rRandom.nextFloat();
-        float fGreen = rRandom.nextFloat();
+    private Color getRandomColor(){
+        final Random rRandom = new Random();
+        final float fRed = rRandom.nextFloat();
+        final float fBlue = rRandom.nextFloat();
+        final float fGreen = rRandom.nextFloat();
         return new Color(fRed, fBlue, fGreen);
     }
 
     // Creates an expansion value based on the current alpha value
-    int getExpansion(int iAmplifier){
-        return ((int)(fAlphaAmount * iAmplifier * fAlphaFactor));
+    int getExpansion(final int iAmplifier){
+        return (int) (fAlphaAmount * iAmplifier * fAlphaFactor);
     }
 
 }

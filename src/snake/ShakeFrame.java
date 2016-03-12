@@ -63,8 +63,8 @@ public class ShakeFrame {
      *
      * @param tetInstance The SnakeGame instance to shake.
      */
-    public ShakeFrame(SnakeGame tetInstance) {
-        this.sSnake = tetInstance;
+    public ShakeFrame(final SnakeGame tetInstance) {
+        sSnake = tetInstance;
         timeListener = new ActionTime();
     }
 
@@ -118,11 +118,11 @@ public class ShakeFrame {
             /*
              * Retrieve the elapsed time since the start of the shaking
              */
-            long lElapsedTime = System.currentTimeMillis() - lStartTime;
+            final long lElapsedTime = System.currentTimeMillis() - lStartTime;
             /*
              * Create a new random number generator
              */
-            Random ranNumGenerator = new Random();
+            final Random ranNumGenerator = new Random();
 
             /*
              * Randomly choose if the frame will be down right or up left
@@ -135,9 +135,9 @@ public class ShakeFrame {
              * factor as an upper limit
              */
             iXOffset = poiInitPos.x +
-                    iDirection * (ranNumGenerator.nextInt(iSHAKE_FACTOR));
+                    (iDirection * ranNumGenerator.nextInt(iSHAKE_FACTOR));
             iYOffset = poiInitPos.y +
-                    iDirection * (ranNumGenerator.nextInt(iSHAKE_FACTOR));
+                    (iDirection * ranNumGenerator.nextInt(iSHAKE_FACTOR));
 
             /*
              * Move and repaint the frame

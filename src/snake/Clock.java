@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 public class Clock implements Serializable {
 
+    public static final long lMILLION = 1000000L;
     /**
      * The number of milliseconds that make up one cycle.
      */
@@ -51,7 +52,7 @@ public class Clock implements Serializable {
      *
      * @param cyclesPerSecond The number of cycles per second.
      */
-    public void setCyclesPerSecond(float cyclesPerSecond) {
+    public void setCyclesPerSecond(final float cyclesPerSecond) {
         this.fMillisPerCycle = (1.0f / cyclesPerSecond) * 1000;
     }
 
@@ -61,10 +62,10 @@ public class Clock implements Serializable {
      * paused flag will be set to false.
      */
     public void reset() {
-        this.iElapsedCycles = 0;
-        this.fExcessCycles = 0.0f;
-        this.lLastUpdate = getCurrentTime();
-        this.isPaused = false;
+        iElapsedCycles = 0;
+        fExcessCycles = 0.0f;
+        lLastUpdate = getCurrentTime();
+        isPaused = false;
     }
 
     /**
@@ -80,12 +81,12 @@ public class Clock implements Serializable {
 
         //Update the number of elapsed and excess ticks if we're not paused.
         if (!isPaused) {
-            this.iElapsedCycles += (int) Math.floor(delta / fMillisPerCycle);
-            this.fExcessCycles = delta % fMillisPerCycle;
+            iElapsedCycles += (int) Math.floor(delta / fMillisPerCycle);
+            fExcessCycles = delta % fMillisPerCycle;
         }
 
         //Set the last update time for the next update cycle.
-        this.lLastUpdate = currUpdate;
+        lLastUpdate = currUpdate;
     }
 
     /**
@@ -95,8 +96,8 @@ public class Clock implements Serializable {
      *
      * @param paused Whether or not to pause this clock.
      */
-    public void setPaused(boolean paused) {
-        this.isPaused = paused;
+    public void setPaused(final boolean paused) {
+        isPaused = paused;
     }
 
     /**
@@ -113,7 +114,6 @@ public class Clock implements Serializable {
      * the number of elapsed cycles will be decremented by one.
      *
      * @return Whether or not a cycle has elapsed.
-     * @see peekElapsedCycle
      */
     public boolean hasElapsedCycle() {
         if (iElapsedCycles > 0) {
@@ -129,7 +129,6 @@ public class Clock implements Serializable {
      * if the number of elapsed cycles is greater than 0.
      *
      * @return Whether or not a cycle has elapsed.
-     * @see hasElapsedCycle
      */
     public boolean peekElapsedCycle() {
         return (iElapsedCycles > 0);
@@ -143,8 +142,8 @@ public class Clock implements Serializable {
      *
      * @return The current time in milliseconds.
      */
-    private static final long getCurrentTime() {
-        return (System.nanoTime() / 1000000L);
+    private static long getCurrentTime() {
+        return System.nanoTime() / lMILLION;
     }
 
 }
