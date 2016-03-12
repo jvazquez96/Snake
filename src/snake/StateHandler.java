@@ -1,6 +1,7 @@
 package snake;
 
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.LinkedList;
@@ -19,8 +20,12 @@ public class StateHandler {
              * Save a serialized version of the individual member variables
              * in the received Snake instance
              */
+            // Asks for the name of the user to save
+            String sName = JOptionPane.showInputDialog("Please input your " +
+                                                               "username");
+            sName = sName.trim().toLowerCase() ;
             ObjectOutputStream objOut = new ObjectOutputStream(
-                    new FileOutputStream("saveGame.bin"));
+                    new FileOutputStream(sName + "_saveGame.bin"));
             writeVariables(snakeGame, objOut);
             objOut.close();
         }
@@ -35,15 +40,25 @@ public class StateHandler {
          * a binary file, and set each member variable in the received Snake
          * instance
          */
+        // Asks for the name of the user to load
+        String sName = JOptionPane.showInputDialog("Please input the username" +
+                                                           " you used to save" +
+                                                           " a previous game");
+        sName = sName.trim().toLowerCase();
         try {
             ObjectInputStream objIn = new ObjectInputStream(
-                    new FileInputStream("saveGame.bin"));
+                    new FileInputStream(sName + "_saveGame.bin"));
             readVariables(snakeGame, objIn);
             objIn.close();
         }
         catch (IOException | ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null,
+                                          "A previous saved game from the " +
+                                                  "user \"" + sName + "\" was" +
+                                                  " not found",
+                                          "Username not found.",
+                                          JOptionPane.ERROR_MESSAGE);
             System.out.println("Could not load the previous game state");
-            e.printStackTrace();
         }
     }
 

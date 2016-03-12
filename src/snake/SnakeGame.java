@@ -27,25 +27,25 @@ public class SnakeGame extends JFrame implements Serializable {
     /**
      * The number of milliseconds that should pass between each frame.
      */
-    private static final long FRAME_TIME = 1000L / 50L;
+    private static final long lFRAME_TIME = 1000L / 50L;
 
     /**
      * The minimum length of the snake. This allows the snake to grow
      * right when the game starts, so that we're not just a head moving
      * around on the board.
      */
-    private static final int MIN_SNAKE_LENGTH = 5;
+    private static final int iMIN_SNAKE_LENGTH = 5;
 
     /**
      * The maximum number of directions that we can have polled in the
      * direction list.
      */
-    private static final int MAX_DIRECTIONS = 3;
+    private static final int iMAX_DIRECTIONS = 3;
 
     /**
      * The BoardPanel instance.
      */
-    private BoardPanel board;
+    private BoardPanel brdBoard;
 
     /**
      * The SidePanel instance.
@@ -60,23 +60,23 @@ public class SnakeGame extends JFrame implements Serializable {
     /**
      * The Clock instance for handling the game logic.
      */
-    private Clock logicTimer;
+    private Clock clkLogicTimer;
 
 
     /**
      * Whether or not we're running a new game.
      */
-    private boolean isNewGame;
+    private boolean bNewGame;
 
     /**
      * Whether or not the game is over.
      */
-    private boolean isGameOver;
+    private boolean bGameOver;
 
     /**
      * Whether or not the game is paused.
      */
-    private boolean isPaused;
+    private boolean bPaused;
 
     /**
      * The shaker helper object for the frame
@@ -94,14 +94,14 @@ public class SnakeGame extends JFrame implements Serializable {
     private LinkedList<Direction> directions;
 
     /**
-     * The current score.
+     * The current iScore.
      */
-    private int score;
+    private int iScore;
 
     /**
      * The number of fruits that we've eaten.
      */
-    private int fruitsEaten;
+    private int iFruitsEaten;
 
     /**
      * The number of points that the next fruit will award us.
@@ -119,17 +119,17 @@ public class SnakeGame extends JFrame implements Serializable {
     private SnakeGame() {
         super("Snake Remake");
         setLayout(new BorderLayout());
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
         bInit = true;
 
         /*
          * Initialize the game's panels and add them to the window.
          */
-        this.board = new BoardPanel(this);
+        this.brdBoard = new BoardPanel(this);
         this.side = new SidePanel(this);
         this.shaShaker = new ShakeFrame(this);
-        add(board, BorderLayout.CENTER);
+        add(brdBoard, BorderLayout.CENTER);
         add(side, BorderLayout.EAST);
 
         /*
@@ -140,7 +140,6 @@ public class SnakeGame extends JFrame implements Serializable {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-
                     /*
                      * If the game is not paused, and the game is not over...
                      *
@@ -150,8 +149,8 @@ public class SnakeGame extends JFrame implements Serializable {
                      */
                     case KeyEvent.VK_W:
                     case KeyEvent.VK_UP:
-                        if (!isPaused && !isGameOver) {
-                            if (directions.size() < MAX_DIRECTIONS) {
+                        if (!bPaused && !bGameOver) {
+                            if (directions.size() < iMAX_DIRECTIONS) {
                                 Direction last = directions.peekLast();
                                 if (last != Direction.South && last != Direction.North) {
                                     directions.addLast(Direction.North);
@@ -169,8 +168,8 @@ public class SnakeGame extends JFrame implements Serializable {
                      */
                     case KeyEvent.VK_S:
                     case KeyEvent.VK_DOWN:
-                        if (!isPaused && !isGameOver) {
-                            if (directions.size() < MAX_DIRECTIONS) {
+                        if (!bPaused && !bGameOver) {
+                            if (directions.size() < iMAX_DIRECTIONS) {
                                 Direction last = directions.peekLast();
                                 if (last != Direction.North && last != Direction.South) {
                                     directions.addLast(Direction.South);
@@ -188,8 +187,8 @@ public class SnakeGame extends JFrame implements Serializable {
                      */
                     case KeyEvent.VK_A:
                     case KeyEvent.VK_LEFT:
-                        if (!isPaused && !isGameOver) {
-                            if (directions.size() < MAX_DIRECTIONS) {
+                        if (!bPaused && !bGameOver) {
+                            if (directions.size() < iMAX_DIRECTIONS) {
                                 Direction last = directions.peekLast();
                                 if (last != Direction.East && last != Direction.West) {
                                     directions.addLast(Direction.West);
@@ -207,8 +206,8 @@ public class SnakeGame extends JFrame implements Serializable {
                      */
                     case KeyEvent.VK_D:
                     case KeyEvent.VK_RIGHT:
-                        if (!isPaused && !isGameOver) {
-                            if (directions.size() < MAX_DIRECTIONS) {
+                        if (!bPaused && !bGameOver) {
+                            if (directions.size() < iMAX_DIRECTIONS) {
                                 Direction last = directions.peekLast();
                                 if (last != Direction.West && last != Direction.East) {
                                     directions.addLast(Direction.East);
@@ -219,12 +218,12 @@ public class SnakeGame extends JFrame implements Serializable {
 
                     /*
                      * If the game is not over, toggle the paused flag and update
-                     * the logicTimer's pause flag accordingly.
+                     * the clkLogicTimer's pause flag accordingly.
                      */
                     case KeyEvent.VK_P:
-                        if (!isGameOver) {
-                            isPaused = !isPaused;
-                            logicTimer.setPaused(isPaused);
+                        if (!bGameOver) {
+                            bPaused = !bPaused;
+                            clkLogicTimer.setPaused(bPaused);
                         }
                         break;
 
@@ -232,17 +231,42 @@ public class SnakeGame extends JFrame implements Serializable {
                      * Reset the game if one is not currently in progress.
                      */
                     case KeyEvent.VK_ENTER:
-                        if (isNewGame || isGameOver) {
+                        if (bNewGame || bGameOver) {
+                            // Unpause the game if it is paused
+                            if (bPaused) {
+                                bPaused = false;
+                                clkLogicTimer.setPaused(false);
+                            }
                             resetGame();
                         }
                         break;
                     case KeyEvent.VK_G:
-                        saveGame(SnakeGame.this);
+                        if (!bGameOver && !bNewGame) {
+                            // Pause the game before saving
+                            if (!bPaused) {
+                                bPaused = true;
+                                clkLogicTimer.setPaused(true);
+                            }
+                            saveGame(SnakeGame.this);
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null,
+                                                          "You cannot save " +
+                                                                  "when you " +
+                                                                  "are " +
+                                                                  "outside a " +
+                                                                  "game",
+                                                          "Not in a game",
+                                                          JOptionPane.ERROR_MESSAGE);
+                        }
                         break;
                     case KeyEvent.VK_C:
-                        resetGame();
+                        // Pause the game before loading
+                        if(!bPaused) {
+                            bPaused = true;
+                            clkLogicTimer.setPaused(true);
+                        }
                         loadGame(SnakeGame.this);
-                        logicTimer.reset();
                         break;
                 }
 
@@ -269,11 +293,11 @@ public class SnakeGame extends JFrame implements Serializable {
         this.random = new Random();
         this.snake = new LinkedList<>();
         this.directions = new LinkedList<>();
-        this.logicTimer = new Clock(9.0f);
-        this.isNewGame = true;
+        this.clkLogicTimer = new Clock(9.0f);
+        this.bNewGame = true;
 
-        //Set the timer to paused initially.
-        logicTimer.setPaused(true);
+        // Set the timer to paused initially.
+        clkLogicTimer.setPaused(true);
 
         /*
          * This is the game loop. It will update and render the game and will
@@ -284,17 +308,17 @@ public class SnakeGame extends JFrame implements Serializable {
             long start = System.nanoTime();
 
             //Update the logic timer.
-            logicTimer.update();
+            clkLogicTimer.update();
 
             /*
              * If a cycle has elapsed on the logic timer, then update the game.
              */
-            if (logicTimer.hasElapsedCycle()) {
+            if (clkLogicTimer.hasElapsedCycle()) {
                 updateGame();
             }
 
             //Repaint the board and side panel with the new content.
-            board.repaint();
+            brdBoard.repaint();
             side.repaint();
 
             /*
@@ -303,9 +327,9 @@ public class SnakeGame extends JFrame implements Serializable {
              * incredibly accurate, it is sufficient for our purposes.
              */
             long delta = (System.nanoTime() - start) / 1000000L;
-            if (delta < FRAME_TIME) {
+            if (delta < lFRAME_TIME) {
                 try {
-                    Thread.sleep(FRAME_TIME - delta);
+                    Thread.sleep(lFRAME_TIME - delta);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -329,7 +353,7 @@ public class SnakeGame extends JFrame implements Serializable {
          * Here we handle the different possible collisions.
          *
          * Fruit: If we collided with a fruit, we increment the number of
-         * fruits that we've eaten, update the score, and spawn a new fruit.
+         * fruits that we've eaten, update the iScore, and spawn a new fruit.
          *
          * SnakeBody: If we collided with our tail (or a wall), we flag that
          * the game is over and pause the game.
@@ -337,19 +361,19 @@ public class SnakeGame extends JFrame implements Serializable {
          * If no collision occurred, we simply decrement the number of points
          * that the next fruit will give us if it's high enough. This adds a
          * bit of skill to the game as collecting fruits more quickly will
-         * yield a higher score.
+         * yield a higher iScore.
          */
         if (collision == TileType.Fruit) {
-            fruitsEaten++;
-            score += nextFruitScore * collision.getValue();
+            iFruitsEaten++;
+            iScore += nextFruitScore * collision.getValue();
             iFactor = collision.getValue();
             spawnFruit();
         }
         else {
             if (collision == TileType.SnakeBody || collision == TileType.BadFruit) {
                 shaShaker.startShaking();
-                isGameOver = true;
-                logicTimer.setPaused(true);
+                bGameOver = true;
+                clkLogicTimer.setPaused(true);
             }
             else {
                 if (nextFruitScore > 10) {
@@ -416,11 +440,11 @@ public class SnakeGame extends JFrame implements Serializable {
          * incase the tile we hit was the tail piece that was just removed
          * to prevent a false game over.
          */
-        TileType old = board.getTile(head.x, head.y);
-        if (old != TileType.Fruit && snake.size() > MIN_SNAKE_LENGTH) {
+        TileType old = brdBoard.getTile(head.x, head.y);
+        if (old != TileType.Fruit && snake.size() > iMIN_SNAKE_LENGTH) {
             Point tail = snake.removeLast();
-            board.setTile(tail, null);
-            old = board.getTile(head.x, head.y);
+            brdBoard.setTile(tail, null);
+            old = brdBoard.getTile(head.x, head.y);
         }
 
         /*
@@ -435,9 +459,9 @@ public class SnakeGame extends JFrame implements Serializable {
          * input.
          */
         if (old != TileType.SnakeBody) {
-            board.setTile(snake.peekFirst(), TileType.SnakeBody);
+            brdBoard.setTile(snake.peekFirst(), TileType.SnakeBody);
             snake.push(head);
-            board.setTile(head, TileType.SnakeHead);
+            brdBoard.setTile(head, TileType.SnakeHead);
             if (directions.size() > 1) {
                 directions.poll();
             }
@@ -450,17 +474,17 @@ public class SnakeGame extends JFrame implements Serializable {
      */
     private void resetGame() {
         /*
-         * Reset the score statistics. (Note that nextFruitPoints is reset in
+         * Reset the iScore statistics. (Note that nextFruitPoints is reset in
          * the spawnFruit function later on).
          */
-        this.score = 0;
-        this.fruitsEaten = 0;
+        this.iScore = 0;
+        this.iFruitsEaten = 0;
 
         /*
          * Reset both the new game and game over flags.
          */
-        this.isNewGame = false;
-        this.isGameOver = false;
+        this.bNewGame = false;
+        this.bGameOver = false;
         this.bInit = true;
 
         /*
@@ -478,8 +502,8 @@ public class SnakeGame extends JFrame implements Serializable {
         /*
          * Clear the board and add the head.
          */
-        board.clearBoard();
-        board.setTile(head, TileType.SnakeHead);
+        brdBoard.clearBoard();
+        brdBoard.setTile(head, TileType.SnakeHead);
 
         /*
          * Clear the directions and add north as the
@@ -491,15 +515,15 @@ public class SnakeGame extends JFrame implements Serializable {
         /*
          * Reset the logic timer.
          */
-        logicTimer.reset();
+        clkLogicTimer.reset();
 
         /*
          * Spawn a new fruit.
          */
         spawnFruit();
-                /*
-                 * Spawn bads fruits.
-                */
+        /*
+         * Spawn bads fruits.
+         */
         spawnBadFruits();
     }
 
@@ -509,7 +533,7 @@ public class SnakeGame extends JFrame implements Serializable {
      * @return The new game flag.
      */
     public boolean isNewGame() {
-        return isNewGame;
+        return bNewGame;
     }
 
     /**
@@ -518,7 +542,7 @@ public class SnakeGame extends JFrame implements Serializable {
      * @return The game over flag.
      */
     public boolean isGameOver() {
-        return isGameOver;
+        return bGameOver;
     }
 
     /**
@@ -527,7 +551,7 @@ public class SnakeGame extends JFrame implements Serializable {
      * @return The paused flag.
      */
     public boolean isPaused() {
-        return isPaused;
+        return bPaused;
     }
 
     /**
@@ -570,10 +594,10 @@ public class SnakeGame extends JFrame implements Serializable {
             int freeFound = -1;
             for (int x = 0; x < BoardPanel.COL_COUNT; x++) {
                 for (int y = 0; y < BoardPanel.ROW_COUNT; y++) {
-                    TileType type = board.getTile(x, y);
+                    TileType type = brdBoard.getTile(x, y);
                     if (type == null || type == TileType.Fruit) {
                         if (++freeFound == index) {
-                            board.setTile(x, y, TileType.Fruit, iRandom);
+                            brdBoard.setTile(x, y, TileType.Fruit, iRandom);
                             break;
                         }
                     }
@@ -598,10 +622,10 @@ public class SnakeGame extends JFrame implements Serializable {
                 .size());
         for (int x = 0; x < BoardPanel.COL_COUNT; x++) {
             for (int y = 0; y < BoardPanel.ROW_COUNT; y++) {
-                TileType type = board.getTile(x, y);
+                TileType type = brdBoard.getTile(x, y);
                 if (type == null || type == TileType.Fruit) {
                     if (++freeFound == index) {
-                        board.setTile(x, y, TileType.Fruit, iRandom);
+                        brdBoard.setTile(x, y, TileType.Fruit, iRandom);
                         break;
                     }
                 }
@@ -609,10 +633,10 @@ public class SnakeGame extends JFrame implements Serializable {
         }
         for (int iC = 0; iC < iFactor; ++iC) {
             Point head = new Point(snake.peekFirst());
-            TileType tilOld = board.getTile(head.x, head.y);
-            board.setTile(snake.peekFirst(), TileType.SnakeBody);
+            TileType tilOld = brdBoard.getTile(head.x, head.y);
+            brdBoard.setTile(snake.peekFirst(), TileType.SnakeBody);
             snake.push(head);
-            board.setTile(head, TileType.SnakeHead);
+            brdBoard.setTile(head, TileType.SnakeHead);
             if (directions.size() > 1) {
                 directions.poll();
             }
@@ -628,10 +652,10 @@ public class SnakeGame extends JFrame implements Serializable {
             int freeFound = -1;
             for (int x = 0; x < BoardPanel.COL_COUNT; x++) {
                 for (int y = 0; y < BoardPanel.ROW_COUNT; y++) {
-                    TileType type = board.getTile(x, y);
+                    TileType type = brdBoard.getTile(x, y);
                     if (type == null || type == TileType.BadFruit) {
                         if (++freeFound == index) {
-                            board.setTile(x, y, TileType.BadFruit, -1);
+                            brdBoard.setTile(x, y, TileType.BadFruit, -1);
                             break;
                         }
                     }
@@ -645,12 +669,12 @@ public class SnakeGame extends JFrame implements Serializable {
     }
 
     /**
-     * Gets the current score.
+     * Gets the current iScore.
      *
-     * @return The score.
+     * @return The iScore.
      */
     public int getScore() {
-        return score;
+        return iScore;
     }
 
     /**
@@ -659,13 +683,13 @@ public class SnakeGame extends JFrame implements Serializable {
      * @return The fruits eaten.
      */
     public int getFruitsEaten() {
-        return fruitsEaten;
+        return iFruitsEaten;
     }
 
     /**
-     * Gets the next fruit score.
+     * Gets the next fruit iScore.
      *
-     * @return The next fruit score.
+     * @return The next fruit iScore.
      */
     public int getNextFruitScore() {
         return nextFruitScore;
@@ -685,15 +709,15 @@ public class SnakeGame extends JFrame implements Serializable {
     }
 
     public BoardPanel getBoard() {
-        return this.board;
+        return this.brdBoard;
     }
 
     public void setNewGame(boolean isNewGame) {
-        this.isNewGame = isNewGame;
+        this.bNewGame = isNewGame;
     }
 
     public void setIsGameOver(boolean isGameOver) {
-        this.isGameOver = isGameOver;
+        this.bGameOver = isGameOver;
     }
 
     public void setNextFruitScore(int nextFruitScore) {
@@ -717,15 +741,15 @@ public class SnakeGame extends JFrame implements Serializable {
     }
 
     public void setIsPaused(boolean isPaused) {
-        this.isPaused = isPaused;
+        this.bPaused = isPaused;
     }
 
     public void setScore(int score) {
-        this.score = score;
+        this.iScore = score;
     }
 
     public void setFruitsEaten(int fruitsEaten) {
-        this.fruitsEaten = fruitsEaten;
+        this.iFruitsEaten = fruitsEaten;
     }
 
     public void setDirection(Direction direction) {
@@ -743,8 +767,8 @@ public class SnakeGame extends JFrame implements Serializable {
     }
 
     public void setBoard(BoardPanel board) {
-        this.board.clearBoard();
-        this.board = board;
+        this.brdBoard.clearBoard();
+        this.brdBoard = board;
     }
 
     /**
