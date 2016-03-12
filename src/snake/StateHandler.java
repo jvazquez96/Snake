@@ -56,7 +56,7 @@ public class StateHandler {
         objOut.writeObject(snakeGame.getFruitsEaten());
         objOut.writeObject(snakeGame.getNextFruitScore());
         objOut.writeObject(snakeGame.isInit());
-        objOut.writeObject(snakeGame.getDirection());
+        objOut.writeObject(snakeGame.getDirections());
         objOut.writeObject(snakeGame.getFactor());
         objOut.writeObject(snakeGame.getSnake());
         objOut.writeObject(snakeGame.getBoard().getT());
@@ -72,7 +72,7 @@ public class StateHandler {
         snakeGame.setFruitsEaten((int) objIn.readObject());
         snakeGame.setNextFruitScore((int) objIn.readObject());
         snakeGame.setInit((boolean) objIn.readObject());
-        snakeGame.setDirection((Direction) objIn.readObject());
+        snakeGame.setDirections((LinkedList<Direction>) objIn.readObject());
         snakeGame.setFactor((int) objIn.readObject());
         snakeGame.setSnake((LinkedList<Point>) objIn.readObject());
         snakeGame.getBoard().setTiles((TileType[]) objIn.readObject());

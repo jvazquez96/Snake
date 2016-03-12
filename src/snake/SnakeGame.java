@@ -728,9 +728,13 @@ public class SnakeGame extends JFrame implements Serializable {
         this.fruitsEaten = fruitsEaten;
     }
 
-    public void setDirection(Direction directions) {
-        this.directions.addFirst(directions);
+    public void setDirection(Direction direction) {
+        this.directions.addFirst(direction);
         //this.directions.addLast(directions);
+    }
+
+    public void setDirections(LinkedList<Direction> directions) {
+        this.directions = directions;
     }
 
     public void setSnake(LinkedList<Point> snake) {
@@ -753,4 +757,7 @@ public class SnakeGame extends JFrame implements Serializable {
         snake.startGame();
     }
 
+    public LinkedList<Direction> getDirections() {
+        return directions;
+    }
 }
