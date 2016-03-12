@@ -1,12 +1,8 @@
 package snake;
 
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * The {@code SidePanel} class is responsible for displaying statistics and
@@ -49,7 +45,7 @@ public class SidePanel extends JPanel {
 		this.game = game;
 		
 		setPreferredSize(new Dimension(300, BoardPanel.ROW_COUNT * BoardPanel.TILE_SIZE));
-		setBackground(Color.BLACK);
+		setBackground(Color.DARK_GRAY.darker().darker());
 	}
 	
 	private static final int STATISTICS_OFFSET = 150;
@@ -65,35 +61,50 @@ public class SidePanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		
+
 		/*
 		 * Set the color to draw the font in to white.
 		 */
 		g.setColor(Color.WHITE);
-		
+
 		/*
 		 * Draw the game name onto the window.
 		 */
 		g.setFont(LARGE_FONT);
-		g.drawString("Snake Game", getWidth() / 2 - g.getFontMetrics().stringWidth("Snake Game") / 2, 50);
-		
+
+		drawWithShadow(g,
+					   getWidth() / 2 - g.getFontMetrics().stringWidth("Snake Game") / 2,
+					   50,
+					   "Snake Game");
 		/*
 		 * Draw the categories onto the window.
 		 */
 		g.setFont(MEDIUM_FONT);
-		g.drawString("Statistics", SMALL_OFFSET, STATISTICS_OFFSET);
-		g.drawString("Controls", SMALL_OFFSET, CONTROLS_OFFSET);
-				
+		drawWithShadow(g, SMALL_OFFSET, STATISTICS_OFFSET, "Statistics");
+		drawWithShadow(g, SMALL_OFFSET, CONTROLS_OFFSET, "Controls");
+
 		/*
 		 * Draw the category content onto the window.
 		 */
 		g.setFont(SMALL_FONT);
-		
+
 		//Draw the content for the statistics category.
 		int drawY = STATISTICS_OFFSET;
 		g.drawString("Total Score: " + game.getScore(), LARGE_OFFSET, drawY += MESSAGE_STRIDE);
 		g.drawString("Fruit Eaten: " + game.getFruitsEaten(), LARGE_OFFSET, drawY += MESSAGE_STRIDE);
-		g.drawString("Fruit Score: " + game.getNextFruitScore(), LARGE_OFFSET, drawY += MESSAGE_STRIDE);
+		g.drawString("Fruit Score: ", LARGE_OFFSET, drawY += MESSAGE_STRIDE);
+		// Draw the score in a color that depends on the value of it
+		if(game.getNextFruitScore() > 72){
+			g.setColor(Color.GREEN.darker());
+		}
+		else if(game.getNextFruitScore() > 30){
+			g.setColor(Color.YELLOW);
+		}
+		else if(game.getNextFruitScore() > 0){
+				g.setColor(Color.RED.darker());
+			}
+		g.drawString("" + game.getNextFruitScore(), LARGE_OFFSET + 75, drawY);
+		g.setColor(Color.WHITE);
 		//Draw the content for the controls category.
 		drawY = CONTROLS_OFFSET;
 		g.drawString("Move Up: W / Up Arrowkey", LARGE_OFFSET, drawY += MESSAGE_STRIDE);
@@ -102,5 +113,20 @@ public class SidePanel extends JPanel {
 		g.drawString("Move Right: D / Right Arrowkey", LARGE_OFFSET, drawY += MESSAGE_STRIDE);
 		g.drawString("Pause Game: P", LARGE_OFFSET, drawY += MESSAGE_STRIDE);
 	}
+
+	void drawWithShadow(Graphics g, int iX, int iY, String sMessage){
+		/*
+		 * Draw a light gray shadow before the main text
+		 */
+		g.setColor(Color.LIGHT_GRAY);
+		g.drawString(sMessage, iX, iY + 1);
+
+		/*
+		 * Draw the main text in white with the preset font
+		 */
+		g.setColor(Color.WHITE);
+		g.drawString(sMessage, iX, iY);
+	}
+
 
 }

@@ -1,13 +1,11 @@
 package snake;
 
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.Point2D;
 import java.io.Serializable;
-import javax.swing.JPanel;
+import java.util.Random;
 
 /**
  * The {@code BoardPanel} class is responsible for managing and displaying the
@@ -85,7 +83,7 @@ public class BoardPanel extends JPanel implements Serializable {
 		this.tiles = new TileType[ROW_COUNT * COL_COUNT];
 		
 		setPreferredSize(new Dimension(COL_COUNT * TILE_SIZE, ROW_COUNT * TILE_SIZE));
-		setBackground(Color.BLACK);
+		setBackground(Color.DARK_GRAY.darker().darker());
 	}
 	
 	/**
@@ -190,11 +188,23 @@ public class BoardPanel extends JPanel implements Serializable {
 				largeMessage = "Paused";
 				smallMessage = "Press P to Resume";
 			}
-			
+
+			/*
+		 	 * Draw a light gray shadow before the main text
+		 	 */
+			g.setFont(FONT);
+			g.setColor(Color.LIGHT_GRAY);
+			g.drawString(largeMessage,
+						 centerX - g.getFontMetrics().stringWidth(largeMessage) / 2,
+						 centerY - 50 + 1);
+			g.drawString(smallMessage,
+						 centerX - g.getFontMetrics().stringWidth(smallMessage) / 2,
+						 centerY + 50 + 1);
+
 			/*
 			 * Set the message font and draw the messages in the center of the board.
 			 */
-			g.setFont(FONT);
+			g.setColor(Color.WHITE);
 			g.drawString(largeMessage, centerX - g.getFontMetrics().stringWidth(largeMessage) / 2, centerY - 50);
 			g.drawString(smallMessage, centerX - g.getFontMetrics().stringWidth(smallMessage) / 2, centerY + 50);
 		}
