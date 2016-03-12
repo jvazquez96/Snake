@@ -15,24 +15,27 @@ public class StateHandler {
      * @param snakeGame
      */
     public static void saveGame(SnakeGame snakeGame) {
-        try {
-            /*
-             * Save a serialized version of the individual member variables
-             * in the received Snake instance
-             */
-            // Asks for the name of the user to save
-            String sName = JOptionPane.showInputDialog("Please input your " +
+        String sName = JOptionPane.showInputDialog("Please input your " +
                                                                "username");
-            sName = sName.trim().toLowerCase() ;
-            ObjectOutputStream objOut = new ObjectOutputStream(
-                    new FileOutputStream(sName + "_saveGame.bin"));
-            writeVariables(snakeGame, objOut);
-            objOut.close();
+        if (sName != null){
+            try {
+                /*
+                 * Save a serialized version of the individual member variables
+                 * in the received Snake instance
+                 */
+                // Asks for the name of the user to save
+
+                sName = sName.trim().toLowerCase() ;
+                ObjectOutputStream objOut = new ObjectOutputStream(
+                        new FileOutputStream(sName + "_saveGame.bin"));
+                writeVariables(snakeGame, objOut);
+                objOut.close();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            }
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void loadGame(SnakeGame snakeGame) {
         /*
@@ -44,22 +47,25 @@ public class StateHandler {
         String sName = JOptionPane.showInputDialog("Please input the username" +
                                                            " you used to save" +
                                                            " a previous game");
-        sName = sName.trim().toLowerCase();
-        try {
-            ObjectInputStream objIn = new ObjectInputStream(
-                    new FileInputStream(sName + "_saveGame.bin"));
-            readVariables(snakeGame, objIn);
-            objIn.close();
-        }
-        catch (IOException | ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(null,
-                                          "A previous saved game from the " +
-                                                  "user \"" + sName + "\" was" +
-                                                  " not found",
-                                          "Username not found.",
-                                          JOptionPane.ERROR_MESSAGE);
-            System.out.println("Could not load the previous game state");
-        }
+        if (sName != null){
+        
+            sName = sName.trim().toLowerCase();
+            try {
+                ObjectInputStream objIn = new ObjectInputStream(
+                        new FileInputStream(sName + "_saveGame.bin"));
+                readVariables(snakeGame, objIn);
+                objIn.close();
+            }
+            catch (IOException | ClassNotFoundException e) {
+                JOptionPane.showMessageDialog(null,
+                                              "A previous saved game from the " +
+                                                      "user \"" + sName + "\" was" +
+                                                      " not found",
+                                              "Username not found.",
+                                              JOptionPane.ERROR_MESSAGE);
+                System.out.println("Could not load the previous game state");
+            }
+            }
     }
 
     private static void writeVariables(SnakeGame snakeGame, ObjectOutputStream objOut) throws
