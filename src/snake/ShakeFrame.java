@@ -8,7 +8,7 @@ import java.util.Random;
 
 /**
  * ShakeFrame
- *
+ * <p>
  * Helper class that shakes the entire Game by a set interval and amount
  *
  * @author Irvel
@@ -60,6 +60,7 @@ public class ShakeFrame {
 
     /**
      * Creates a new ShakeFrame instance
+     *
      * @param tetInstance The SnakeGame instance to shake.
      */
     public ShakeFrame(SnakeGame tetInstance) {
@@ -73,8 +74,8 @@ public class ShakeFrame {
      */
     public void startShaking() {
         /*
-	     * Save the original position of the Frame
-		 */
+         * Save the original position of the Frame
+         */
         poiInitPos = sSnake.getLocation();
         lStartTime = System.currentTimeMillis();
         timTime = new Timer(iUPDATE_TIME, timeListener);
@@ -84,7 +85,7 @@ public class ShakeFrame {
     /**
      * Stops the shaking and puts the frame back to its original location.
      */
-    public void stopShake(){
+    public void stopShake() {
         timTime.stop();
         sSnake.setLocation(poiInitPos);
         sSnake.repaint();
@@ -92,7 +93,7 @@ public class ShakeFrame {
 
     /**
      * ActionTime
-     *
+     * <p>
      * Helper class that tracks the amount of time that passes and moves the
      * frame by the set duration and shake factor.
      *
@@ -112,7 +113,7 @@ public class ShakeFrame {
         private int iYOffset;
 
         @Override
-        public void actionPerformed(ActionEvent e){
+        public void actionPerformed(ActionEvent e) {
             int iDirection = 1;
             /*
              * Retrieve the elapsed time since the start of the shaking
@@ -134,9 +135,9 @@ public class ShakeFrame {
              * factor as an upper limit
              */
             iXOffset = poiInitPos.x +
-                       iDirection * (ranNumGenerator.nextInt(iSHAKE_FACTOR));
+                    iDirection * (ranNumGenerator.nextInt(iSHAKE_FACTOR));
             iYOffset = poiInitPos.y +
-                       iDirection * (ranNumGenerator.nextInt(iSHAKE_FACTOR));
+                    iDirection * (ranNumGenerator.nextInt(iSHAKE_FACTOR));
 
             /*
              * Move and repaint the frame
@@ -147,7 +148,7 @@ public class ShakeFrame {
             /*
              * Stop shaking if the elapsed time exeeds the duration
              */
-            if(lElapsedTime > iDURATION) {
+            if (lElapsedTime > iDURATION) {
                 stopShake();
             }
         }

@@ -7,17 +7,18 @@ import java.util.LinkedList;
 
 
 public class StateHandler {
-    
+
     /**
      * Saves the current game member variables to a binary file.
+     *
      * @param snakeGame
      */
     public static void saveGame(SnakeGame snakeGame) {
         try {
             /*
-			 * Save a serialized version of the individual member variables
-			 * in the received Snake instance
-			 */
+             * Save a serialized version of the individual member variables
+             * in the received Snake instance
+             */
             ObjectOutputStream objOut = new ObjectOutputStream(
                     new FileOutputStream("saveGame.bin"));
             writeVariables(snakeGame, objOut);
@@ -27,12 +28,13 @@ public class StateHandler {
             e.printStackTrace();
         }
     }
+
     public static void loadGame(SnakeGame snakeGame) {
         /*
-	     * Load a serialized version of a previous game state from
-	     * a binary file, and set each member variable in the received Snake
-	     * instance
-		 */
+         * Load a serialized version of a previous game state from
+         * a binary file, and set each member variable in the received Snake
+         * instance
+         */
         try {
             ObjectInputStream objIn = new ObjectInputStream(
                     new FileInputStream("saveGame.bin"));
@@ -44,7 +46,9 @@ public class StateHandler {
             e.printStackTrace();
         }
     }
-    private static void writeVariables(SnakeGame snakeGame, ObjectOutputStream objOut) throws IOException{
+
+    private static void writeVariables(SnakeGame snakeGame, ObjectOutputStream objOut) throws
+                                                                                       IOException {
         objOut.writeObject(snakeGame.isNewGame());
         objOut.writeObject(snakeGame.isGameOver());
         objOut.writeObject(snakeGame.isPaused());
@@ -58,7 +62,9 @@ public class StateHandler {
         objOut.writeObject(snakeGame.getBoard().getT());
     }
 
-    private static void readVariables(SnakeGame snakeGame, ObjectInputStream objIn) throws IOException, ClassNotFoundException{
+    private static void readVariables(SnakeGame snakeGame, ObjectInputStream objIn) throws
+                                                                                    IOException,
+                                                                                    ClassNotFoundException {
         snakeGame.setNewGame((boolean) objIn.readObject());
         snakeGame.setIsGameOver((boolean) objIn.readObject());
         snakeGame.setIsPaused((boolean) objIn.readObject());
@@ -70,6 +76,6 @@ public class StateHandler {
         snakeGame.setFactor((int) objIn.readObject());
         snakeGame.setSnake((LinkedList<Point>) objIn.readObject());
         snakeGame.getBoard().setTiles((TileType[]) objIn.readObject());
-       
+
     }
 }
