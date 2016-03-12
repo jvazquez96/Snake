@@ -17,7 +17,7 @@ import static snake.StateHandler.saveGame;
  *
  */
 public class SnakeGame extends JFrame implements Serializable{
-		
+
 	/**
 	 * The Serial Version UID.
 	 */
@@ -27,52 +27,52 @@ public class SnakeGame extends JFrame implements Serializable{
 	 * The number of milliseconds that should pass between each frame.
 	 */
 	private static final long FRAME_TIME = 1000L / 50L;
-	
+
 	/**
 	 * The minimum length of the snake. This allows the snake to grow
 	 * right when the game starts, so that we're not just a head moving
 	 * around on the board.
 	 */
 	private static final int MIN_SNAKE_LENGTH = 5;
-	
+
 	/**
 	 * The maximum number of directions that we can have polled in the
 	 * direction list.
 	 */
 	private static final int MAX_DIRECTIONS = 3;
-	
+
 	/**
 	 * The BoardPanel instance.
 	 */
 	private BoardPanel board;
-	
+
 	/**
 	 * The SidePanel instance.
 	 */
 	private SidePanel side;
-	
+
 	/**
 	 * The random number generator (used for spawning fruits).
 	 */
 	private Random random;
-	
+
 	/**
 	 * The Clock instance for handling the game logic.
 	 */
 	private Clock logicTimer;
-	
+
         
 	/**
 	 * Whether or not we're running a new game.
 	 */
 	private boolean isNewGame;
-		
+
 	/**
 	 * Whether or not the game is over.
 	 */
 	private boolean isGameOver;
-	
-	/**	
+
+	/**
 	 * Whether or not the game is paused.
 	 */
 	private boolean isPaused;
@@ -81,35 +81,35 @@ public class SnakeGame extends JFrame implements Serializable{
 	 * The shaker helper object for the frame
 	 */
 	private ShakeFrame shaShaker;
-	
+
 	/**
 	 * The list that contains the points for the snake.
 	 */
 	private LinkedList<Point> snake;
-	
+
 	/**
 	 * The list that contains the queued directions.
 	 */
 	private LinkedList<Direction> directions;
-	
+
 	/**
 	 * The current score.
 	 */
 	private int score;
-	
+
 	/**
 	 * The number of fruits that we've eaten.
 	 */
 	private int fruitsEaten;
-	
+
 	/**
 	 * The number of points that the next fruit will award us.
 	 */
 	private int nextFruitScore;
-	
-        private boolean bInit;
+
+	private boolean bInit;
         
-        private int iFactor;
+	private int iFactor;
 	/**
 	 * Creates a new SnakeGame instance. Creates a new window,
 	 * and sets up the controller input.
@@ -120,7 +120,7 @@ public class SnakeGame extends JFrame implements Serializable{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
                 bInit = true;
-				
+
 		/*
 		 * Initialize the game's panels and add them to the window.
 		 */
@@ -129,19 +129,19 @@ public class SnakeGame extends JFrame implements Serializable{
 		this.shaShaker = new ShakeFrame(this);
 		add(board, BorderLayout.CENTER);
 		add(side, BorderLayout.EAST);
-		
+
 		/*
-		 * Adds a new key listener to the frame to process input. 
+		 * Adds a new key listener to the frame to process input.
 		 */
 		addKeyListener(new KeyAdapter() {
-			
+
 			@Override
 			public void keyPressed(KeyEvent e) {
 				switch(e.getKeyCode()) {
 
 				/*
 				 * If the game is not paused, and the game is not over...
-				 * 
+				 *
 				 * Ensure that the direction list is not full, and that the most
 				 * recent direction is adjacent to North before adding the
 				 * direction to the list.
@@ -160,11 +160,11 @@ public class SnakeGame extends JFrame implements Serializable{
 
 				/*
 				 * If the game is not paused, and the game is not over...
-				 * 
+				 *
 				 * Ensure that the direction list is not full, and that the most
 				 * recent direction is adjacent to South before adding the
 				 * direction to the list.
-				 */	
+				 */
 				case KeyEvent.VK_S:
 				case KeyEvent.VK_DOWN:
 					if(!isPaused && !isGameOver) {
@@ -176,14 +176,14 @@ public class SnakeGame extends JFrame implements Serializable{
 						}
 					}
 					break;
-				
+
 				/*
 				 * If the game is not paused, and the game is not over...
-				 * 
+				 *
 				 * Ensure that the direction list is not full, and that the most
 				 * recent direction is adjacent to West before adding the
 				 * direction to the list.
-				 */						
+				 */
 				case KeyEvent.VK_A:
 				case KeyEvent.VK_LEFT:
 					if(!isPaused && !isGameOver) {
@@ -195,14 +195,14 @@ public class SnakeGame extends JFrame implements Serializable{
 						}
 					}
 					break;
-			
+
 				/*
 				 * If the game is not paused, and the game is not over...
-				 * 
+				 *
 				 * Ensure that the direction list is not full, and that the most
 				 * recent direction is adjacent to East before adding the
 				 * direction to the list.
-				 */		
+				 */
 				case KeyEvent.VK_D:
 				case KeyEvent.VK_RIGHT:
 					if(!isPaused && !isGameOver) {
@@ -214,7 +214,7 @@ public class SnakeGame extends JFrame implements Serializable{
 						}
 					}
 					break;
-				
+
 				/*
 				 * If the game is not over, toggle the paused flag and update
 				 * the logicTimer's pause flag accordingly.
@@ -225,7 +225,7 @@ public class SnakeGame extends JFrame implements Serializable{
 						logicTimer.setPaused(isPaused);
 					}
 					break;
-				
+
 				/*
 				 * Reset the game if one is not currently in progress.
 				 */
@@ -244,9 +244,9 @@ public class SnakeGame extends JFrame implements Serializable{
 				}
                                 
 			}
-			
+
 		});
-		
+
 		/*
 		 * Resize the window to the appropriate size, center it on the
 		 * screen and display it.
@@ -255,7 +255,7 @@ public class SnakeGame extends JFrame implements Serializable{
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-	
+
 	/**
 	 * Starts the game running.
 	 */
@@ -268,7 +268,7 @@ public class SnakeGame extends JFrame implements Serializable{
 		this.directions = new LinkedList<>();
 		this.logicTimer = new Clock(9.0f);
 		this.isNewGame = true;
-		
+
 		//Set the timer to paused initially.
 		logicTimer.setPaused(true);
 
@@ -279,21 +279,21 @@ public class SnakeGame extends JFrame implements Serializable{
 		while(true) {
 			//Get the current frame's start time.
 			long start = System.nanoTime();
-			
+
 			//Update the logic timer.
 			logicTimer.update();
-			
+
 			/*
 			 * If a cycle has elapsed on the logic timer, then update the game.
 			 */
 			if(logicTimer.hasElapsedCycle()) {
 				updateGame();
 			}
-			
+
 			//Repaint the board and side panel with the new content.
 			board.repaint();
 			side.repaint();
-			
+
 			/*
 			 * Calculate the delta time between since the start of the frame
 			 * and sleep for the excess time to cap the frame rate. While not
@@ -309,27 +309,27 @@ public class SnakeGame extends JFrame implements Serializable{
 			}
 		}
 	}
-	
+
 	/**
 	 * Updates the game's logic.
 	 */
 	private void updateGame() {
 		/*
-		 * Gets the type of tile that the head of the snake collided with. If 
+		 * Gets the type of tile that the head of the snake collided with. If
 		 * the snake hit a wall, SnakeBody will be returned, as both conditions
 		 * are handled identically.
 		 */
 		TileType collision = updateSnake();
-		
+
 		/*
 		 * Here we handle the different possible collisions.
-		 * 
+		 *
 		 * Fruit: If we collided with a fruit, we increment the number of
 		 * fruits that we've eaten, update the score, and spawn a new fruit.
-		 * 
+		 *
 		 * SnakeBody: If we collided with our tail (or a wall), we flag that
 		 * the game is over and pause the game.
-		 * 
+		 *
 		 * If no collision occurred, we simply decrement the number of points
 		 * that the next fruit will give us if it's high enough. This adds a
 		 * bit of skill to the game as collecting fruits more quickly will
@@ -353,7 +353,7 @@ public class SnakeGame extends JFrame implements Serializable{
 		}
                 
 	}
-	
+
 	/**
 	 * Updates the snake's position and size.
 	 * @return Tile tile that the head moved into.
@@ -367,30 +367,30 @@ public class SnakeGame extends JFrame implements Serializable{
 		 * it will not move).
 		 */
 		Direction direction = directions.peekFirst();
-				
+
 		/*
 		 * Here we calculate the new point that the snake's head will be at
 		 * after the update.
-		 */		
+		 */
 		Point head = new Point(snake.peekFirst());
 		switch(direction) {
 		case North:
 			head.y--;
 			break;
-			
+
 		case South:
 			head.y++;
 			break;
-			
+
 		case West:
 			head.x--;
 			break;
-			
+
 		case East:
 			head.x++;
 			break;
 		}
-		
+
 		/*
 		 * If the snake has moved out of bounds ('hit' a wall), we can just
 		 * return that it's collided with itself, as both cases are handled
@@ -399,12 +399,12 @@ public class SnakeGame extends JFrame implements Serializable{
 		if(head.x < 0 || head.x >= BoardPanel.COL_COUNT || head.y < 0 || head.y >= BoardPanel.ROW_COUNT) {
 			return TileType.SnakeBody; //Pretend we collided with our body.
 		}
-		
+
 		/*
 		 * Here we get the tile that was located at the new head position and
 		 * remove the tail from of the snake and the board if the snake is
 		 * long enough, and the tile it moved onto is not a fruit.
-		 * 
+		 *
 		 * If the tail was removed, we need to retrieve the old tile again
 		 * incase the tile we hit was the tail piece that was just removed
 		 * to prevent a false game over.
@@ -415,15 +415,15 @@ public class SnakeGame extends JFrame implements Serializable{
 			board.setTile(tail, null);
 			old = board.getTile(head.x, head.y);
 		}
-		
+
 		/*
 		 * Update the snake's position on the board if we didn't collide with
 		 * our tail:
-		 * 
+		 *
 		 * 1. Set the old head position to a body tile.
 		 * 2. Add the new head to the snake.
 		 * 3. Set the new head position to a head tile.
-		 * 
+		 *
 		 * If more than one direction is in the queue, poll it to read new
 		 * input.
 		 */
@@ -437,7 +437,7 @@ public class SnakeGame extends JFrame implements Serializable{
 		}
 		return old;
 	}
-	
+
 	/**
 	 * Resets the game's variables to their default states and starts a new game.
 	 */
@@ -448,14 +448,14 @@ public class SnakeGame extends JFrame implements Serializable{
 		 */
 		this.score = 0;
 		this.fruitsEaten = 0;
-		
+
 		/*
 		 * Reset both the new game and game over flags.
 		 */
 		this.isNewGame = false;
 		this.isGameOver = false;
                 this.bInit = true;
-		
+
 		/*
 		 * Create the head at the center of the board.
 		 */
@@ -466,25 +466,25 @@ public class SnakeGame extends JFrame implements Serializable{
 		 */
 		snake.clear();
 		snake.add(head);
-		
+
 		/*
 		 * Clear the board and add the head.
 		 */
 		board.clearBoard();
 		board.setTile(head, TileType.SnakeHead);
-		
+
 		/*
 		 * Clear the directions and add north as the
 		 * default direction.
 		 */
 		directions.clear();
 		directions.add(Direction.North);
-		
+
 		/*
 		 * Reset the logic timer.
 		 */
 		logicTimer.reset();
-		
+
 		/*
 		 * Spawn a new fruit.
 		 */
@@ -494,7 +494,7 @@ public class SnakeGame extends JFrame implements Serializable{
                 */
                 spawnBadFruits();
 	}
-	
+
 	/**
 	 * Gets the flag that indicates whether or not we're playing a new game.
 	 * @return The new game flag.
@@ -502,7 +502,7 @@ public class SnakeGame extends JFrame implements Serializable{
 	public boolean isNewGame() {
 		return isNewGame;
 	}
-	
+
 	/**
 	 * Gets the flag that indicates whether or not the game is over.
 	 * @return The game over flag.
@@ -510,7 +510,7 @@ public class SnakeGame extends JFrame implements Serializable{
 	public boolean isGameOver() {
 		return isGameOver;
 	}
-	
+
 	/**
 	 * Gets the flag that indicates whether or not the game is paused.
 	 * @return The paused flag.
@@ -518,7 +518,7 @@ public class SnakeGame extends JFrame implements Serializable{
 	public boolean isPaused() {
 		return isPaused;
 	}
-	
+
 	/**
 	 * Spawns a new fruit onto the board.
 	 */
@@ -528,12 +528,12 @@ public class SnakeGame extends JFrame implements Serializable{
 		 * Get a random index based on the number of free spaces left on the board.
 		 */
 		int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
-		
+
 		/*
 		 * While we could just as easily choose a random index on the board
 		 * and check it if it's free until we find an empty one, that method
 		 * tends to hang if the snake becomes very large.
-		 * 
+		 *
 		 * This method simply loops through until it finds the nth free index
 		 * and selects uses that. This means that the game will be able to
 		 * locate an index at a relatively constant rate regardless of the
@@ -545,7 +545,7 @@ public class SnakeGame extends JFrame implements Serializable{
                     spawnOneFruit();
                 }
 	}
-	
+
         private void spawnMultipleFruits(){
                 int iCounter = 3;
                 int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
@@ -559,7 +559,7 @@ public class SnakeGame extends JFrame implements Serializable{
 				TileType type = board.getTile(x, y);
 				if(type == null || type == TileType.Fruit) {
 					if(++freeFound == index) {
-						board.setTile(x, y, TileType.Fruit,iRandom);    
+						board.setTile(x, y, TileType.Fruit,iRandom);
 						break;
 					}
 				}
@@ -571,62 +571,62 @@ public class SnakeGame extends JFrame implements Serializable{
                 bInit = false;
                 
         }
-        
-        
-        private void spawnOneFruit(){
-            //Randomize the value for one fruit
-            //this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
-            this.nextFruitScore = 100;
-            int iRandom = (int) (Math.random() * ((4-1) + 1) + 1);
-            int freeFound = -1;
-            int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
-            for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
-		for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
-                    TileType type = board.getTile(x, y);
-                    if(type == null || type == TileType.Fruit) {
-			if(++freeFound == index) {
-                            board.setTile(x, y, TileType.Fruit,iRandom);
-                            break;
+
+
+	private void spawnOneFruit(){
+		//Randomize the value for one fruit
+		//this.nextFruitScore = (int) (Math.random() * ((100-0) + 1) + 0);
+		this.nextFruitScore = 100;
+		int iRandom = (int) (Math.random() * ((4-1) + 1) + 1);
+		int freeFound = -1;
+		int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+		for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
+			for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
+				TileType type = board.getTile(x, y);
+				if(type == null || type == TileType.Fruit) {
+					if(++freeFound == index) {
+						board.setTile(x, y, TileType.Fruit,iRandom);
+						break;
+					}
+				}
 			}
-                    }
 		}
-            }
-            System.out.println(iFactor);
-            for (int iC = 0; iC < iFactor;++iC){
-                System.out.println("Enters");
-                Point head = new Point(snake.peekFirst());
-                TileType tilOld = board.getTile(head.x,head.y);
-                board.setTile(snake.peekFirst(),TileType.SnakeBody);
-                snake.push(head);
-                board.setTile(head, TileType.SnakeHead);
-                if (directions.size() > 1){
-                    directions.poll();
-                }
-                
-            }
-        }
-        
-        private void spawnBadFruits(){
-            int iCounter = 3;
-            int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
-            while (iCounter > 0){
-            int freeFound = -1;
-            for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
-                for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
-                    TileType type = board.getTile(x, y);
-                    if(type == null || type == TileType.BadFruit) {
-			if(++freeFound == index) {
-                            board.setTile(x, y, TileType.BadFruit,-1);    
-                            break;
+		System.out.println(iFactor);
+		for (int iC = 0; iC < iFactor;++iC){
+			System.out.println("Enters");
+			Point head = new Point(snake.peekFirst());
+			TileType tilOld = board.getTile(head.x,head.y);
+			board.setTile(snake.peekFirst(),TileType.SnakeBody);
+			snake.push(head);
+			board.setTile(head, TileType.SnakeHead);
+			if (directions.size() > 1){
+				directions.poll();
 			}
-                    }
-                }
-            }
-            --iCounter;
-            index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
-            }
-            
-        }
+
+		}
+	}
+
+	private void spawnBadFruits(){
+		int iCounter = 3;
+		int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+		while (iCounter > 0){
+			int freeFound = -1;
+			for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
+				for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
+					TileType type = board.getTile(x, y);
+					if(type == null || type == TileType.BadFruit) {
+						if(++freeFound == index) {
+							board.setTile(x, y, TileType.BadFruit,-1);
+							break;
+						}
+					}
+				}
+			}
+			--iCounter;
+			index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+		}
+
+	}
   
 	/**
 	 * Gets the current score.
@@ -635,7 +635,7 @@ public class SnakeGame extends JFrame implements Serializable{
 	public int getScore() {
 		return score;
 	}
-	
+
 	/**
 	 * Gets the number of fruits eaten.
 	 * @return The fruits eaten.
@@ -643,7 +643,7 @@ public class SnakeGame extends JFrame implements Serializable{
 	public int getFruitsEaten() {
 		return fruitsEaten;
 	}
-	
+
 	/**
 	 * Gets the next fruit score.
 	 * @return The next fruit score.
@@ -651,7 +651,7 @@ public class SnakeGame extends JFrame implements Serializable{
 	public int getNextFruitScore() {
 		return nextFruitScore;
 	}
-	
+
 	/**
 	 * Gets the current direction of the snake.
 	 * @return The current direction.
@@ -659,45 +659,74 @@ public class SnakeGame extends JFrame implements Serializable{
 	public Direction getDirection() {
 		return directions.peek();
 	}
+
 	public LinkedList getSnake(){
             return snake;
         }
-        public BoardPanel getBoard(){
-            return this.board;
-        }
+	public BoardPanel getBoard(){
+		return this.board;
+	}
         
-        public void setNewGame(boolean isNewGame){
-            this.isNewGame = isNewGame;
-        }
-        public void setIsGameOver(boolean isGameOver){
-            if (isGameOver){
-                System.out.println("True");
-            }else{
-                System.out.println("False");
-            }
-            this.isGameOver = isGameOver;
-        }
-        public void setIsPaused(boolean isPaused){
-            this.isPaused = isPaused;
-        }
-        public void setScore(int score){
-            this.score = score;
-        }
-        public void setFruitsEaten(int fruitsEaten){
-            this.fruitsEaten = fruitsEaten;
-        }
-        public void setDirection(Direction directions){
-            this.directions.addFirst(directions);
-            //this.directions.addLast(directions);
-        }
-        public void setSnake(LinkedList<Point> snake){
-            this.snake.clear();
-            this.snake = snake;
-        }
-        public void setBoard(BoardPanel board){
-            this.board.clearBoard();
-            this.board = board;
-        }
+	public void setNewGame(boolean isNewGame){
+		this.isNewGame = isNewGame;
+	}
+
+	public void setIsGameOver(boolean isGameOver){
+		if (isGameOver){
+			System.out.println("True");
+		}else{
+			System.out.println("False");
+		}
+		this.isGameOver = isGameOver;
+	}
+
+	public void setNextFruitScore(int nextFruitScore) {
+		this.nextFruitScore = nextFruitScore;
+	}
+
+	public boolean isInit() {
+		return bInit;
+	}
+
+	public void setInit(boolean bInit) {
+		this.bInit = bInit;
+	}
+
+	public int getFactor() {
+		return iFactor;
+	}
+
+	public void setFactor(int iFactor) {
+		this.iFactor = iFactor;
+	}
+
+	public void setIsPaused(boolean isPaused){
+		this.isPaused = isPaused;
+	}
+
+	public void setScore(int score){
+		this.score = score;
+	}
+
+	public void setFruitsEaten(int fruitsEaten){
+		this.fruitsEaten = fruitsEaten;
+	}
+
+	public void setDirection(Direction directions){
+		this.directions.addFirst(directions);
+		//this.directions.addLast(directions);
+	}
+
+	public void setSnake(LinkedList<Point> snake){
+		this.snake.clear();
+		this.snake = snake;
+	}
+
+	public void setBoard(BoardPanel board){
+		this.board.clearBoard();
+		this.board = board;
+	}
+
 	/**
 	 * Entry point of the program.
 	 * @param args Unused.

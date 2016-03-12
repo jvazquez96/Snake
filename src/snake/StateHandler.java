@@ -4,16 +4,8 @@ package snake;
 import java.awt.*;
 import java.io.*;
 import java.util.LinkedList;
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author JorgeVazquez
- */
+
 public class StateHandler {
     
     /**
@@ -58,17 +50,24 @@ public class StateHandler {
         objOut.writeObject(snakeGame.isPaused());
         objOut.writeObject(snakeGame.getScore());
         objOut.writeObject(snakeGame.getFruitsEaten());
+        objOut.writeObject(snakeGame.getNextFruitScore());
+        objOut.writeObject(snakeGame.isInit());
         objOut.writeObject(snakeGame.getDirection());
+        objOut.writeObject(snakeGame.getFactor());
         objOut.writeObject(snakeGame.getSnake());
         objOut.writeObject(snakeGame.getBoard().getT());
     }
+
     private static void readVariables(SnakeGame snakeGame, ObjectInputStream objIn) throws IOException, ClassNotFoundException{
         snakeGame.setNewGame((boolean) objIn.readObject());
         snakeGame.setIsGameOver((boolean) objIn.readObject());
         snakeGame.setIsPaused((boolean) objIn.readObject());
         snakeGame.setScore((int) objIn.readObject());
         snakeGame.setFruitsEaten((int) objIn.readObject());
+        snakeGame.setNextFruitScore((int) objIn.readObject());
+        snakeGame.setInit((boolean) objIn.readObject());
         snakeGame.setDirection((Direction) objIn.readObject());
+        snakeGame.setFactor((int) objIn.readObject());
         snakeGame.setSnake((LinkedList<Point>) objIn.readObject());
         snakeGame.getBoard().setTiles((TileType[]) objIn.readObject());
        
